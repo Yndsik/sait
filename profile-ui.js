@@ -27,10 +27,12 @@ async function uploadProfileAvatar(input){
  finally{URL.revokeObjectURL(url);if(request===avatarRequest){avatarBusy=false;if($('#profileSave'))$('#profileSave').disabled=false}input.value=''}
 }
 function applyProfile(){
- const p=YndsiProfile.clean(db.profile);document.documentElement.style.setProperty('--purple',YndsiProfile.accents[p.accent].color);
+ const p=YndsiProfile.clean(workspaceOwner?db.profile:window.ynSocial?.profile||{});document.documentElement.style.setProperty('--purple',YndsiProfile.accents[p.accent].color);
  const avatar=document.querySelector('.topright .avatar');if(avatar){avatar.innerHTML=profileAvatar(p);avatar.title='Настроить профиль: '+p.name;avatar.setAttribute('aria-label',avatar.title)}
  const footer=document.querySelector('.sidefoot');if(footer)footer.innerHTML=`<small>ТВОЁ ПРОСТРАНСТВО</small><b style="display:block;margin:8px 0;overflow-wrap:anywhere">${esc(p.name)}</b><small>${esc(p.bio||'Следующая история начинается здесь.')}</small>`;
 }
 const beforeProfileRender=render;
 render=function(){beforeProfileRender();applyProfile()};
 render();
+
+window.ynProfileReset=()=>{avatarRequest++;avatarBusy=false;profileDraft=null};
