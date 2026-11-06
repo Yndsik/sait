@@ -1,6 +1,6 @@
 const {interests}=require('../../recommendations.js');
 const {normalize}=require('../../lib/steam.cjs');
-const cache=new Map(), pending=new Map();
+const cache=new Map(), pending=new Map(),requests=new Map();
 async function remote(url, ttl=900000) {
   const hit=cache.get(url); if(hit?.expires>Date.now())return hit.value;
   if(pending.has(url))return pending.get(url);
@@ -21,14 +21,16 @@ async function detail(id){
 exports.handler=async event=>{
   const reply=(statusCode,data)=>({statusCode,headers:{'Content-Type':'application/json; charset=utf-8','Cache-Control':'private, no-store'},body:JSON.stringify(data)});
   if(event.httpMethod!=='GET')return reply(405,{error:'Метод не поддерживается'});
-  const base=process.env.SUPABASE_URL,key=process.env.SUPABASE_PUBLISHABLE_KEY,owner=process.env.OWNER_USER_ID;
-  if(!base||!key||!owner)return reply(503,{error:'Нужна настройка серверного доступа: SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, OWNER_USER_ID.'});
+  const base=process.env.SUPABASE_URL,key=process.env.SUPABASE_PUBLISHABLE_KEY;
+  if(!base||!key)return reply(503,{error:'Нужна настройка серверного доступа: SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY.'});
   const token=event.headers?.authorization||event.headers?.Authorization;
-  if(!/^Bearer [\w.-]+$/.test(token||''))return reply(401,{error:'Войди в аккаунт владельца'});
+  if(!/^Bearer [\w.-]+$/.test(token||''))return reply(401,{error:'Войди в аккаунт'});
   try{
     const r=await fetch(new URL('/auth/v1/user',base),{headers:{apikey:key,Authorization:token},signal:AbortSignal.timeout(8000)});
     if(!r.ok)return reply(401,{error:'Сессия истекла. Войди снова.'});
-    if((await r.json()).id!==owner)return reply(403,{error:'Доступ только владельцу'});
+    const member=await r.json();
+    if(!member.id||(!member.email_confirmed_at&&!member.invited_at&&member.id!==process.env.OWNER_USER_ID))return reply(403,{error:'Подтверди электронную почту'});
+    const now=Date.now(),recent=requests.get(member.id);if(recent&&recent.until>now){if(recent.count>=30)return reply(429,{error:'Слишком много запросов. Подожди минуту.'});recent.count++}else{if(requests.size>=2000)requests.delete(requests.keys().next().value);requests.set(member.id,{count:1,until:now+60000})}
   }catch{return reply(503,{error:'Сервис авторизации недоступен'})}
   const p=event.queryStringParameters||{},q=(p.q||'').trim(),page=Number(p.page||1);
   if(q.length>100||!Number.isInteger(page)||page<1||page>100)return reply(400,{error:'Некорректный запрос'});

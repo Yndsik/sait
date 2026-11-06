@@ -10,14 +10,14 @@ const {handler}=require('../netlify/functions/steam');
 test('API fails closed before contacting Steam',async()=>{assert.equal((await handler({httpMethod:'POST'})).statusCode,405);assert.equal((await handler({httpMethod:'GET',headers:{}})).statusCode,503)});
 test('owner auth, pagination, App ID and upstream errors',async()=>{
  process.env.SUPABASE_URL='https://example.supabase.co';process.env.SUPABASE_PUBLISHABLE_KEY='public-test';process.env.OWNER_USER_ID='owner';
- const original=global.fetch;let user='other',broken=false;const urls=[];
- global.fetch=async url=>{url=String(url);urls.push(url);if(url.includes('/auth/'))return {ok:true,json:async()=>({id:user})};if(broken)throw Error('offline');if(url.includes('/search/'))return {ok:true,json:async()=>({results_html:'<a data-ds-appid="12345"></a>',total_count:30})};if(url.includes('appdetails'))return {ok:true,json:async()=>({'12345':{success:true,data:{type:'game',steam_appid:12345,name:'Example'}}})};return {ok:true,json:async()=>url.includes('/IUserReviewsService/GetAppReviews/v1/') && JSON.parse(new URL(url).searchParams.get('input_json')).review_type===0?{response:{query_summary:{total_reviews:100,total_positive:95}}}:{reviews:[]}}};
+ const original=global.fetch;let user='unconfirmed',broken=false;const urls=[];
+ global.fetch=async url=>{url=String(url);urls.push(url);if(url.includes('/auth/'))return {ok:true,json:async()=>({id:user,email_confirmed_at:user==='unconfirmed'?null:'2026-11-07T00:00:00Z'})};if(broken)throw Error('offline');if(url.includes('/search/'))return {ok:true,json:async()=>({results_html:'<a data-ds-appid="12345"></a>',total_count:30})};if(url.includes('appdetails'))return {ok:true,json:async()=>({'12345':{success:true,data:{type:'game',steam_appid:12345,name:'Example'}}})};return {ok:true,json:async()=>url.includes('/IUserReviewsService/GetAppReviews/v1/') && JSON.parse(new URL(url).searchParams.get('input_json')).review_type===0?{response:{query_summary:{total_reviews:100,total_positive:95}}}:{reviews:[]}}};
  const e={httpMethod:'GET',headers:{authorization:'Bearer test.token'},queryStringParameters:{q:'Example',page:'2'}};
  try{
  assert.equal((await handler({...e,headers:{}})).statusCode,401);
  assert.equal((await handler(e)).statusCode,403);assert.equal(urls.length,1);
  user='owner';const r=await handler(e);assert.equal(r.statusCode,200);const data=JSON.parse(r.body);assert.equal(data.games[0].appId,12345);assert.equal(data.games[0].reviews.percent,95);assert.ok(urls.some(u=>u.includes('/IUserReviewsService/GetAppReviews/v1/')));assert.equal(urls.some(u=>u.includes('/appreviews/')),false);assert.ok(data.games[0].gemsScore>0);assert.equal(data.hasMore,true);assert.ok(urls.some(u=>u.includes('start=12')));
- assert.equal((await handler({...e,queryStringParameters:{q:'12345'}})).statusCode,200);
+ assert.equal((await handler({...e,queryStringParameters:{q:'12345'}})).statusCode,200);user='member';assert.equal((await handler({...e,queryStringParameters:{q:'12345'}})).statusCode,200);user='owner';
  assert.equal((await handler({...e,queryStringParameters:{page:'-1'}})).statusCode,400);
  assert.equal((await handler({...e,queryStringParameters:{discovery:'1',tag:'122'}})).statusCode,200);assert.ok(urls.some(u=>u.includes('tags=122')&&u.includes('filter=popularnew')));assert.equal((await handler({...e,queryStringParameters:{discovery:'1',tag:'invalid'}})).statusCode,400);
  broken=true;assert.equal((await handler({...e,queryStringParameters:{q:'Uncached'}})).statusCode,502);

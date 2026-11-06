@@ -16,7 +16,7 @@ function socialChatShell(){if(!social.chat)return '<div class="empty social-chat
 async function socialLoad(){
  if(social.busy||!window.ynSync?.getUser())return;const generation=social.generation;social.busy=true;social.error='';
  try{const home=await socialRPC('yn_social_home');if(!Object.hasOwn(home.profile,'profile_completed'))throw Error('Нужно выполнить обновление базы «Постоянный ID и профиль» в Supabase.');if(generation!==social.generation)return;social.home=home;if(social.chat){const current=home.links.find(p=>p.code===social.chat.code&&p.status==='accepted');if(current)social.chat=current;else{social.chat=null;social.messages=[]}}}
- catch(e){if(generation===social.generation)social.error=socialError(e)}finally{if(generation===social.generation){social.busy=false;if(social.home&&!social.home.profile.profile_completed){page='settings';render()}else if(page==='settings')render();else if(page==='friends'||!workspaceOwner)socialRender()}}
+ catch(e){if(generation===social.generation)social.error=socialError(e)}finally{if(generation===social.generation){social.busy=false;if(social.home&&!social.home.profile.profile_completed){page='settings';render()}else if(page==='settings')render();else if(page==='friends'||!workspaceAccess)socialRender()}}
 }
 async function copyFriendId(){try{await navigator.clipboard.writeText(social.home.profile.code);toast('ID скопирован')}catch{toast('Твой ID: '+social.home.profile.code)}}
 async function findFriend(){const code=$('#friendCode').value.trim().toUpperCase();if(!/^[A-F0-9]{12}$/.test(code))return;const generation=social.generation;const box=$('#friendSearch');box.textContent='Ищем…';try{const p=await socialRPC('yn_social_find',{p_code:code});if(generation!==social.generation||!box.isConnected)return;box.innerHTML=p?`<div class="social-person"><div class="row">${friendAvatar(p)}<b>${esc(p.name)}</b></div><p>${esc(p.bio)}</p><button class="btn mini" onclick="requestFriend('${p.code}')">Добавить в друзья</button></div>`:'<p class="tiny">Профиль не найден. Проверь ID.</p>'}catch(e){if(box.isConnected)box.textContent=socialError(e)}}
@@ -41,7 +41,7 @@ async function publishSocialIdentity(profile){
  const generation=social.generation;
  if(!social.home){const home=await socialRPC('yn_social_home');if(generation!==social.generation)throw Error('Аккаунт изменился');social.home=home}
  if(!Object.hasOwn(social.home.profile,'profile_completed'))throw Error('Нужно выполнить обновление базы «Постоянный ID и профиль» в Supabase.');
- await socialRPC('yn_social_profile',{p_name:profile.name,p_bio:workspaceOwner?social.home.profile.bio:profile.bio,p_avatar:profile.avatar});
+ await socialRPC('yn_social_profile',{p_name:profile.name,p_bio:workspaceAccess?social.home.profile.bio:profile.bio,p_avatar:profile.avatar});
  if(generation!==social.generation)throw Error('Аккаунт изменился. Сохрани профиль заново.');
- social.home.profile={...social.home.profile,name:profile.name,avatar:profile.avatar,bio:workspaceOwner?social.home.profile.bio:profile.bio,profile_completed:true};
+ social.home.profile={...social.home.profile,name:profile.name,avatar:profile.avatar,bio:workspaceAccess?social.home.profile.bio:profile.bio,profile_completed:true};
 }
