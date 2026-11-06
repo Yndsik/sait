@@ -29,3 +29,10 @@ test('read position ignores hidden chats and outgoing messages',async()=>{
  const messages=[{id:'9',mine:false},{id:'10',mine:true}];await context.markChatRead('ABCDEF123456',messages);assert.equal(calls.length,0);
  context.document.hidden=false;context.document.querySelector=()=>({});await context.markChatRead('ABCDEF123456',messages);assert.equal(calls.length,0);context.document.querySelector=()=>null;await context.markChatRead('ABCDEF123456',messages);await context.markChatRead('ABCDEF123456',messages);assert.equal(calls.length,1);assert.equal(calls[0].name,'yn_chat_mark_read');assert.equal(calls[0].args.p_through,'9');
 });
+
+test('profile schedule renders published fields in viewer timezone',()=>{
+ const context={YndsiCommunity:model,currentTimeZone:()=> 'Asia/Tokyo',esc:s=>String(s).replaceAll('<','&lt;'),window:{ynSync:{getClient:()=>null}},document:{addEventListener(){}},go(){}};
+ vm.createContext(context);vm.runInContext(fs.readFileSync('chat-media-ui.js','utf8'),context);
+ const html=context.profileSchedulePreview({token:'12345678-1234-1234-1234-123456789abc',entries:[{title:'<Live>',game:'Game',startsAt:'2030-01-01T15:00:00Z',description:'PRIVATE',plan:'PRIVATE'}]});
+ assert.ok(html.includes('Asia/Tokyo'));assert.ok(html.includes('&lt;Live>'));assert.ok(html.includes('00:00'));assert.ok(!html.includes('PRIVATE'));assert.ok(!context.profileSchedulePreview(null).includes('Live'));
+});
