@@ -24,10 +24,10 @@ test('revoking publication does not depend on saving the private workspace',asyn
  await context.publishSchedule(false,[],false);assert.equal(calls.length,1);assert.equal(calls[0].args.p_enabled,false);
 });
 test('read position ignores hidden chats and outgoing messages',async()=>{
- const calls=[];const context={page:'friends',workspaceAccess:false,social:{chat:{code:'ABCDEF123456'}},profileForm:()=>'',window:{ynSocial:{reset(){}},ynSync:{getUser:()=>null},addEventListener(){}},document:{hidden:true,addEventListener(){}},setInterval(){},socialRPC:async(name,args)=>{calls.push({name,args})}};
+ const calls=[];const context={page:'messages',workspaceAccess:false,social:{chat:{code:'ABCDEF123456'}},profileForm:()=>'',window:{ynSocial:{reset(){}},ynSync:{getUser:()=>null},addEventListener(){}},document:{hidden:true,addEventListener(){}},setInterval(){},socialRPC:async(name,args)=>{calls.push({name,args})}};
  vm.createContext(context);vm.runInContext(fs.readFileSync('notifications-ui.js','utf8'),context);
  const messages=[{id:'9',mine:false},{id:'10',mine:true}];await context.markChatRead('ABCDEF123456',messages);assert.equal(calls.length,0);
- context.document.hidden=false;context.document.querySelector=()=>({});await context.markChatRead('ABCDEF123456',messages);assert.equal(calls.length,0);context.document.querySelector=()=>null;await context.markChatRead('ABCDEF123456',messages);await context.markChatRead('ABCDEF123456',messages);assert.equal(calls.length,1);assert.equal(calls[0].name,'yn_chat_mark_read');assert.equal(calls[0].args.p_through,'9');
+ context.document.hidden=false;context.page='friends';await context.markChatRead('ABCDEF123456',messages);assert.equal(calls.length,0);context.page='messages';context.document.querySelector=()=>({});await context.markChatRead('ABCDEF123456',messages);assert.equal(calls.length,0);context.document.querySelector=()=>null;await context.markChatRead('ABCDEF123456',messages);await context.markChatRead('ABCDEF123456',messages);assert.equal(calls.length,1);assert.equal(calls[0].name,'yn_chat_mark_read');assert.equal(calls[0].args.p_through,'9');
 });
 
 test('profile schedule renders published fields in viewer timezone',()=>{
