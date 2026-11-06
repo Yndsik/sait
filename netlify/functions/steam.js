@@ -9,7 +9,7 @@ async function remote(url, ttl=900000) {
 async function detail(id){
   const data=await remote(`https://store.steampowered.com/api/appdetails?appids=${id}&l=russian&cc=KZ`);
   if(!data[id]?.success||data[id].data.type!=='game')return null;
-  const reviews=await remote(`https://store.steampowered.com/appreviews/${id}?json=1&language=all&purchase_type=all&num_per_page=1`).catch(()=>null);
+  const reviews=await remote(`https://store.steampowered.com/appreviews/${id}?json=1&filter=all&language=all&purchase_type=all&num_per_page=1`).catch(()=>null);
   return normalize(data[id].data,reviews);
 }
 exports.handler=async event=>{
