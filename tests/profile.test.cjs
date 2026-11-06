@@ -7,12 +7,12 @@ test('profile normalizes names, constrains accents and rejects external or execu
  assert.equal(clean({avatar:'data:image/webp;base64,AAAA'}).avatar,'data:image/webp;base64,AAAA');
  assert.equal(initials('Мой Профиль'),'МП');
 });
-test('saving and cancelling profile leave game and stream records intact',()=>{
+test('saving and cancelling profile leave game and stream records intact',async()=>{
  const fs=require('node:fs'),vm=require('node:vm');let saves=0;
  const fields={'#profileForm':{reportValidity:()=>true},'#profileName':{value:'Новый ник'},'#profileBio':{value:'Хорроры и инди'}};
- const context={window:{},workspaceOwner:true,YndsiProfile:require('../profile-model.js'),settings:()=>'',render(){},db:{profile:{name:'Old'},games:[{id:'g'}],streams:[{id:'s'}]},$:s=>fields[s],save(){saves++},toast(){},document:{documentElement:{style:{setProperty(){}}},querySelector:s=>s.includes('profileAccent')?{value:'cyan'}:null}};
+ const context={window:{},page:'settings',workspaceOwner:true,YndsiProfile:require('../profile-model.js'),settings:()=>'',render(){},db:{profile:{name:'Old'},games:[{id:'g'}],streams:[{id:'s'}]},$:s=>fields[s],save(){saves++},toast(){},document:{documentElement:{style:{setProperty(){}}},querySelector:s=>s.includes('profileAccent')?{value:'cyan'}:null}};
  vm.createContext(context);vm.runInContext(fs.readFileSync('profile-ui.js','utf8'),context);
  context.cancelProfile();assert.equal(context.db.profile.name,'Old');assert.equal(saves,0);
- context.saveProfile();assert.equal(context.db.profile.name,'Новый ник');assert.equal(context.db.profile.accent,'cyan');assert.equal(saves,1);assert.equal(context.db.games[0].id,'g');assert.equal(context.db.streams[0].id,'s');
- fields['#profileName'].value='  ';context.saveProfile();assert.equal(saves,1);
+ await context.saveProfile();assert.equal(context.db.profile.name,'Новый ник');assert.equal(context.db.profile.accent,'cyan');assert.equal(saves,1);assert.equal(context.db.games[0].id,'g');assert.equal(context.db.streams[0].id,'s');
+ fields['#profileName'].value='  ';await context.saveProfile();assert.equal(saves,1);
 });

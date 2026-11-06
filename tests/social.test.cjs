@@ -21,3 +21,15 @@ test('chat merges large IDs without precision loss and escapes user labels',()=>
  const result=context.mergeChatMessages([{id:'9007199254740993',body:'old'}],[{id:'9007199254740992',body:'earlier'},{id:'9007199254740993',body:'updated'}]);assert.equal(result.length,2);assert.equal(result[0].id,'9007199254740992');assert.equal(result[1].body,'updated');
  const rendered=context.socialLinks([{code:'ABCDEF123456',name:'<img onerror=alert(1)>',status:'accepted'}]);assert.equal(rendered.includes('<img onerror'),false);assert.ok(rendered.includes('&lt;img'));
 });
+test('identity sync updates chosen nickname and avatar without publishing private bio',async()=>{
+ let sent,fail=false;
+ const client={rpc:async(name,args)=>{sent={name,args};return fail?{error:{message:'offline'}}:{data:null,error:null}}};
+ const context={window:{ynSync:{getUser:()=>null,getClient:()=>client},addEventListener(){}},setInterval(){}};
+ vm.createContext(context);vm.runInContext(fs.readFileSync('social-ui.js','utf8'),context);
+ context.window.ynSync.getUser=()=>({id:'owner'});
+ vm.runInContext("social.home={profile:{name:'Old',bio:'Public bio',avatar:'',code:'ABCDEF123456'},links:[]}",context);
+ await context.publishSocialIdentity({name:'MyNick',avatar:'data:image/webp;base64,AAAA',bio:'Private notes'});
+ assert.equal(sent.name,'yn_social_profile');assert.equal(sent.args.p_name,'MyNick');assert.equal(sent.args.p_bio,'Public bio');assert.equal(sent.args.p_avatar,'data:image/webp;base64,AAAA');
+ assert.equal(vm.runInContext('social.home.profile.name',context),'MyNick');
+ fail=true;await assert.rejects(()=>context.publishSocialIdentity({name:'Unsaved',avatar:''}),/offline/);assert.equal(vm.runInContext('social.home.profile.name',context),'MyNick');
+});
