@@ -3,14 +3,17 @@ const cache=new Map(), pending=new Map();
 async function remote(url, ttl=900000) {
   const hit=cache.get(url); if(hit?.expires>Date.now())return hit.value;
   if(pending.has(url))return pending.get(url);
-  const job=(async()=>{const r=await fetch(url,{signal:AbortSignal.timeout(10000)});if(!r.ok)throw Error('upstream');const value=await r.json();if(cache.size>=500)cache.delete(cache.keys().next().value);cache.set(url,{value,expires:Date.now()+ttl});return value;})();
+  const job=(async()=>{const r=await fetch(url,{signal:AbortSignal.timeout(10000)});if(!r.ok)throw Error('HTTP '+r.status);let value;try{value=await r.json()}catch{throw Error('INVALID_JSON')} ;if(cache.size>=500)cache.delete(cache.keys().next().value);cache.set(url,{value,expires:Date.now()+ttl});return value;})();
   pending.set(url,job);try{return await job}finally{pending.delete(url)}
 }
 async function detail(id){
   const data=await remote(`https://store.steampowered.com/api/appdetails?appids=${id}&l=russian&cc=KZ`);
   if(!data[id]?.success||data[id].data.type!=='game')return null;
-  const reviews=await remote(`https://store.steampowered.com/appreviews/${id}?json=1&filter=all&language=all&purchase_type=all&num_per_page=1`).catch(()=>null);
-  return normalize(data[id].data,reviews);
+  let reviewsError=null;
+  const reviews=await remote(`https://store.steampowered.com/appreviews/${id}/?json=1&filter=all&language=all&purchase_type=all&num_per_page=1`).catch(e=>{reviewsError=/^HTTP \d{3}$/.test(e.message)?e.message:e.message==='INVALID_JSON'?'Ответ Steam не является JSON':'Сеть или время ожидания';return null});
+  const game=normalize(data[id].data,reviews);
+  if(!game.reviews)game.reviewsError=reviewsError||'В ответе Steam нет корректной сводки отзывов';
+  return game;
 }
 exports.handler=async event=>{
   const reply=(statusCode,data)=>({statusCode,headers:{'Content-Type':'application/json; charset=utf-8','Cache-Control':'private, no-store'},body:JSON.stringify(data)});
