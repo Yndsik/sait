@@ -1,0 +1,34 @@
+// Extend the existing application without replacing its workspace or navigation.
+const steamState={games:[],page:1,hasMore:false,q:'',gems:false,request:0};
+library=function(){return head('STEAM DATABASE','Библиотека игр','Каталог Steam и личная база YNDSI.',`<button class="btn" onclick="openModal('game')">＋ Своя игра</button>`)+`<div class="card"><form class="toolbar" onsubmit="event.preventDefault();steamSearch()"><input class="field" id="gamequery" maxlength="100" placeholder="Название или Steam App ID" value="${esc(steamState.q)}"><button class="btn primary">Найти</button><button type="button" class="btn" onclick="loadFeatured()">Hidden Gems</button></form><div class="toolbar"><label>Жанр <input class="field" id="steamgenre" placeholder="Например, Indie" oninput="paintSteam()"></label><label>Оценка от, % <input class="field" id="steamrating" type="number" min="0" max="100" value="${steamState.gems?85:0}" oninput="paintSteam()"></label><label>Отзывов до <input class="field" id="steamreviews" type="number" min="10" value="${steamState.gems?5000:''}" oninput="paintSteam()"></label><label>Год <input class="field" id="steamyear" type="number" min="1970" max="2100" oninput="paintSteam()"></label><select aria-label="Цена" class="field" id="steamprice" onchange="paintSteam()"><option value="">Любая цена</option><option value="free">Бесплатные</option><option value="paid">Платные</option></select><select aria-label="Режим игры" class="field" id="steammode" onchange="paintSteam()"><option value="">Любой режим</option><option value="2">Одиночные</option><option value="1">Мультиплеер</option></select><select aria-label="Сортировка" class="field" id="steamsort" onchange="paintSteam()"><option value="gems">Hidden Gems Score</option><option value="rating">Пользовательская оценка</option><option value="reviews">Меньше отзывов</option><option value="title">Название</option></select></div><p class="tiny">Фильтры и сортировка применяются к загруженным страницам. Hidden Gems исследует выдачу Steam по отзывам, это не полный рейтинг каталога. Популярность оценивается только числом отзывов; число игроков и длительность недоступны.</p><div id="steamresults" aria-live="polite"></div><button class="btn" id="steammore" onclick="fetchSteam(true)" ${steamState.hasMore?'':'hidden'}>Загрузить ещё</button></div><div class="card" style="margin-top:14px"><h2>Моя библиотека · ${db.games.length}</h2>${db.games.map(gameRow).join('')||'<p class="empty">Добавь первую игру из Steam или вручную</p>'}</div>`};
+const originalRender=render;
+render=function(){originalRender();if(page==='library')paintSteam()};
+steamSearch=function(){steamState.q=$('#gamequery').value.trim();steamState.gems=false;fetchSteam(false)};
+loadFeatured=function(){steamState.q='';steamState.gems=true;steamState.games=[];render();fetchSteam(false)};
+async function fetchSteam(more){
+ const request=++steamState.request,next=more?steamState.page+1:1;
+ $('#steamresults').setAttribute('aria-busy','true');$('#steammore').disabled=true;
+ if(!more)$('#steamresults').innerHTML='<p class="empty">Загружаем игры и отзывы Steam…</p>';
+ try{
+  const token=await window.ynSync.accessToken();if(!token)throw Error('Войди в аккаунт владельца');
+  const params=new URLSearchParams({q:steamState.q,page:next,gems:steamState.gems?'1':'0'});
+  const r=await fetch('/.netlify/functions/steam?'+params,{headers:{Authorization:'Bearer '+token}});const data=await r.json();if(!r.ok)throw Error(data.error||'Ошибка запроса');
+  if(request!==steamState.request)return;
+  steamState.games=more?[...new Map([...steamState.games,...data.games].map(g=>[g.appId,g])).values()]:data.games;
+  steamState.page=next;steamState.hasMore=data.hasMore;
+  if(page==='library'){paintSteam();if(data.partial)toast('Часть карточек недоступна — повтори поиск позже')}
+ }catch(e){if(request===steamState.request&&page==='library')$('#steamresults').innerHTML=`<p class="empty">${esc(e.message)}</p>`}
+ finally{if(request===steamState.request&&page==='library'){$('#steamresults').removeAttribute('aria-busy');$('#steammore').disabled=false}}
+}
+function paintSteam(){
+ if(!$('#steamresults'))return;
+ const genre=$('#steamgenre').value.toLowerCase(),rating=Number($('#steamrating').value),max=Number($('#steamreviews').value),year=$('#steamyear').value,price=$('#steamprice').value,mode=Number($('#steammode').value),sort=$('#steamsort').value;
+ const list=steamState.games.filter(g=>(!genre||g.genres.some(x=>x.toLowerCase().includes(genre)))&&(!rating||(g.reviews?.percent??-1)>=rating)&&(!max||(g.reviews&&g.reviews.total<=max))&&(!year||g.release?.includes(year))&&(!price||(price==='free'?g.free:!g.free))&&(!mode||g.categories.some(c=>c.id===mode)));
+ list.sort((a,b)=>sort==='title'?a.title.localeCompare(b.title):sort==='reviews'?(a.reviews?.total??Infinity)-(b.reviews?.total??Infinity):sort==='rating'?(b.reviews?.percent??-1)-(a.reviews?.percent??-1):(b.gemsScore??-1)-(a.gemsScore??-1));
+ $('#steamresults').innerHTML=list.map(g=>`<article class="entry"><div class="game"><img class="cover" loading="lazy" src="${esc(g.image)}" alt=""><div class="gameinfo"><b>${esc(g.title)}</b><small>${esc(g.genres.join(' · '))}</small><small>${g.free?'Бесплатно':esc(g.price||'Цена недоступна')} · ${esc(g.release||'Дата неизвестна')}</small></div><button class="btn mini" onclick="steamAdd(${g.appId})">＋ Wishlist</button></div><p>${esc(g.description||'Описание недоступно')}</p><div class="actions"><span class="pill">${g.reviews?.percent??'—'}% · ${g.reviews?.total??'—'} отзывов</span><span class="pill">Gems ${g.gemsScore??'—'}/100</span><a class="btn mini" href="${esc(g.url)}" target="_blank" rel="noopener noreferrer">Steam ↗</a></div><details><summary>Подробности и скриншоты</summary><p>Разработчик: ${esc(g.developers.join(', '))} · Издатель: ${esc(g.publishers.join(', '))}</p><p>${esc(g.categories.map(c=>c.name).join(' · '))}</p><p>Metacritic: ${g.metacritic??'Нет данных'} · Игроки онлайн и время прохождения: нет данных</p><div class="steamshots">${g.screenshots.map(s=>`<img loading="lazy" src="${esc(s)}" alt="Скриншот ${esc(g.title)}">`).join('')}</div></details></article>`).join('')||'<p class="empty">Нет игр по текущим фильтрам. Измени фильтры или загрузи следующую страницу.</p>';
+ $('#steammore').hidden=!steamState.hasMore;
+}
+function steamAdd(id){const g=steamState.games.find(g=>g.appId===id);if(g)addSteamGame({...g,id:'steam'+id,genre:g.genres.join(', ')})}
+const previousGameRow=gameRow;
+gameRow=function(g){return previousGameRow(g).replace('<div class="actions">',`<div class="actions"><button class="btn mini" onclick="editItem('games','${esc(g.id)}')">Изменить</button><button class="btn mini" onclick="favoriteGame('${esc(g.id)}')">${g.favorite?'★':'☆'}</button>`)};
+function favoriteGame(id){const g=db.games.find(g=>g.id===id);g.favorite=!g.favorite;save()}

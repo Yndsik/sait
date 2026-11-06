@@ -1,0 +1,11 @@
+{
+  "name": "yndsi-streamer-hub",
+  "private": true,
+  "scripts": {
+    "test": "node tests/steam.test.cjs",
+    "check": "node --check netlify/functions/steam.js && node --check steam-ui.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
