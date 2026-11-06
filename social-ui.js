@@ -51,7 +51,8 @@ async function publishSocialIdentity(profile){
  const generation=social.generation;
  if(!social.home){const home=await socialRPC('yn_social_home');if(generation!==social.generation)throw Error('Аккаунт изменился');social.home=home}
  if(!Object.hasOwn(social.home.profile,'profile_completed'))throw Error('Нужно выполнить обновление базы «Постоянный ID и профиль» в Supabase.');
- await socialRPC('yn_social_profile',{p_name:profile.name,p_bio:workspaceAccess?social.home.profile.bio:profile.bio,p_avatar:profile.avatar,p_time_zone:profile.timeZone||null});
+ const args={p_name:profile.name,p_bio:workspaceAccess?social.home.profile.bio:profile.bio,p_avatar:profile.avatar};
+ try{await socialRPC('yn_social_profile',{...args,p_time_zone:profile.timeZone||null})}catch(e){if(!/Could not find the function public\.yn_social_profile.*p_time_zone/i.test(e.message))throw e;if(generation!==social.generation)throw Error('Аккаунт изменился');await socialRPC('yn_social_profile',args)}
  if(generation!==social.generation)throw Error('Аккаунт изменился. Сохрани профиль заново.');
  social.home.profile={...social.home.profile,name:profile.name,avatar:profile.avatar,time_zone:profile.timeZone||social.home.profile.time_zone,bio:workspaceAccess?social.home.profile.bio:profile.bio,profile_completed:true};
 }

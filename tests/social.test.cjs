@@ -73,3 +73,13 @@ test('friend action opens dedicated messages and returning to dialogs preserves 
  fields.get('#chatText').value='Draft for Bob';context.closeFriendChat();assert.equal(vm.runInContext('social.chat',context),null);assert.equal(vm.runInContext('social.drafts.BBBBBBBBBBBB',context),'Draft for Bob');
  context.window.ynSocial.reset=()=>{};
 });
+
+test('profile save supports the previous database signature without retrying permission errors',async()=>{
+ const calls=[];let denied=false;
+ const context={workspaceAccess:true,window:{ynSync:{getUser:()=>null},addEventListener(){}},setInterval(){}};
+ vm.createContext(context);vm.runInContext(fs.readFileSync('social-ui.js','utf8'),context);
+ vm.runInContext("social.home={profile:{code:'AAAAAAAAAAAA',profile_completed:true,bio:''}}",context);
+ context.socialRPC=async(name,args)=>{calls.push(args);if(denied)throw Error('permission denied');if('p_time_zone' in args)throw Error('Could not find the function public.yn_social_profile(p_avatar, p_bio, p_name, p_time_zone) in the schema cache')};
+ await context.publishSocialIdentity({name:'Alice',avatar:'',timeZone:'Asia/Tokyo'});assert.equal(calls.length,2);assert.equal('p_time_zone' in calls[1],false);
+ denied=true;await assert.rejects(()=>context.publishSocialIdentity({name:'Bob',avatar:''}),/permission denied/);assert.equal(calls.length,3);
+});
