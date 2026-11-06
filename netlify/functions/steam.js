@@ -10,7 +10,9 @@ async function detail(id){
   const data=await remote(`https://store.steampowered.com/api/appdetails?appids=${id}&l=russian&cc=KZ`);
   if(!data[id]?.success||data[id].data.type!=='game')return null;
   let reviewsError=null;
-  const reviews=await remote(`https://store.steampowered.com/appreviews/${id}/?json=1&filter=all&language=all&purchase_type=all&num_per_page=1`).catch(e=>{reviewsError=/^HTTP \d{3}$/.test(e.message)?e.message:e.message==='INVALID_JSON'?'Ответ Steam не является JSON':'Сеть или время ожидания';return null});
+  const reviewURL=new URL('https://api.steampowered.com/IUserReviewsService/GetAppReviews/v1/');
+  reviewURL.searchParams.set('input_json',JSON.stringify({appid:Number(id),filter:0,languages:['all'],day_range:0,review_type:0,purchase_type:1,num_per_page:1,display_language:'russian'}));
+  const reviews=await remote(reviewURL.toString()).catch(e=>{reviewsError=/^HTTP \d{3}$/.test(e.message)?e.message:e.message==='INVALID_JSON'?'Ответ Steam не является JSON':'Сеть или время ожидания';return null});
   const game=normalize(data[id].data,reviews);
   if(!game.reviews)game.reviewsError=reviewsError||'В ответе Steam нет корректной сводки отзывов';
   return game;
