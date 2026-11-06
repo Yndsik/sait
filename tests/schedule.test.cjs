@@ -15,11 +15,21 @@ test('upcoming ignores past times, cancelled streams and supports legacy records
 });
 test('stream submission links game, stores UTC, preserves unknown fields and validates before writes',()=>{
  let values={title:'Стрим',gameId:'g',game:'Game',date:'2026-11-07',time:'20:00',duration:'2',status:'Запланирован',description:'Note',plan:'Plan'};
- let saves=0;const context={YndsiSchedule:model,openModal(){},gameRow(){return ''},render(){},db:{games:[{id:'g',title:'Game',status:'Хочу пройти'}],streams:[]},editing:null,uid:()=> 'stream-id',closeModal(){},save(){saves++},toast(){},confirm:()=>true,
+ let saves=0;const context={currentTimeZone:()=>'Asia/Atyrau',YndsiSchedule:model,openModal(){},gameRow(){return ''},render(){},db:{games:[{id:'g',title:'Game',status:'Хочу пройти'}],streams:[]},editing:null,uid:()=> 'stream-id',closeModal(){},save(){saves++},toast(){},confirm:()=>true,
  $:()=>({querySelectorAll:()=>Object.entries(values).map(([name,value])=>({name,value,reportValidity:()=>true}))})};
  vm.createContext(context);vm.runInContext(fs.readFileSync('schedule-ui.js','utf8'),context);
  context.saveStream();assert.equal(saves,1);assert.equal(context.db.streams[0].startsAt,'2026-11-07T15:00:00.000Z');assert.equal(context.db.games[0].status,'Скоро на стриме');assert.equal(context.db.streams[0].gameId,'g');
  context.editing='stream-id';context.db.streams[0].category='Preserved';values={...values,time:'21:00'};context.saveStream();assert.equal(context.db.streams.length,1);assert.equal(context.db.streams[0].category,'Preserved');assert.equal(context.db.streams[0].startsAt,'2026-11-07T16:00:00.000Z');
  values={...values,date:'2026-02-30'};context.saveStream();assert.equal(saves,2);
  context.deleteStream();assert.equal(context.db.streams.length,0);assert.equal(saves,3);
+});
+
+test('DST gaps are rejected and repeated wall times retain both UTC choices',()=>{
+ assert.deepEqual(model.resolve('2027-03-14','02:30','America/New_York'),[]);
+ assert.deepEqual(model.resolve('2026-11-01','01:30','America/New_York'),['2026-11-01T05:30:00.000Z','2026-11-01T06:30:00.000Z']);
+ assert.equal(model.toUTC('2026-11-01','01:30','America/New_York','later'),'2026-11-01T06:30:00.000Z');
+ assert.equal(model.toUTC('2026-11-07','12:00','Asia/Kathmandu'),'2026-11-07T06:15:00.000Z');
+ const stream={startsAt:'2026-11-07T06:15:00Z',timeZone:'Asia/Kathmandu'};
+ assert.equal(model.localParts(model.instant(stream),'Europe/London').time,'06:15');
+ assert.equal(model.instant(stream),Date.parse(stream.startsAt));
 });

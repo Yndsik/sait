@@ -8,9 +8,9 @@ test('media policy restricts types, sizes and duration',()=>{
 function setup(getUserMedia){
  const fields=new Map();const $=id=>{if(!fields.has(id))fields.set(id,{value:'',textContent:'',innerHTML:'',hidden:false,disabled:false});return fields.get(id)};let stops=0,created=0,preview=0,moved='';
  const stream={getTracks:()=>[{stop(){stops++}}]};
- class Recorder{constructor(){created++;this.mimeType='audio/mp4';this.state='inactive'}static isTypeSupported(type){return type==='audio/mp4'}start(){this.state='recording'}stop(){this.state='inactive';this.ondataavailable?.({data:new Blob(['voice'],{type:'audio/mp4'})});this.onstop?.()}}
+ class Recorder{constructor(){created++;this.mimeType='audio/mp4';this.state='inactive'}static isTypeSupported(type){return type==='audio/mp4'}start(){this.state='recording'}pause(){this.state='paused'}resume(){this.state='recording'}stop(){this.state='inactive';this.ondataavailable?.({data:new Blob(['voice'],{type:'audio/mp4'})});this.onstop?.()}}
  const context={Blob,Date,URL:{createObjectURL:()=> 'blob:test',revokeObjectURL(){}},YndsiMedia:model,MediaRecorder:Recorder,navigator:{mediaDevices:{getUserMedia:getUserMedia||(()=>Promise.resolve(stream))}},document:{getElementById:()=>null,addEventListener(){}},window:{ynSync:{getClient:()=>null,getUser:()=>({id:'sender'})}},social:{chat:{code:'ABCDEF123456'}},setInterval:()=>1,clearInterval(){},go:p=>{moved=p},toast(){},$,esc:s=>String(s)};
- vm.createContext(context);vm.runInContext(fs.readFileSync('chat-media-ui.js','utf8'),context);context.mediaDialogBody=()=>{};context.showMediaPreview=()=>{preview++};
+ vm.createContext(context);vm.runInContext(fs.readFileSync('chat-media-ui.js','utf8'),context);vm.runInContext(fs.readFileSync('recorder-ui.js','utf8'),context);context.mediaDialogBody=()=>{};context.showMediaPreview=()=>{preview++};
  return {context,stream,stops:()=>stops,created:()=>created,preview:()=>preview,moved:()=>moved};
 }
 test('cancel while permission is pending stops the subsequently granted stream',async()=>{
@@ -27,4 +27,27 @@ test('retry after lost send acknowledgement reuses the uploaded attachment',asyn
  vm.runInContext("mediaDraft.kind='photo';mediaDraft.code='ABCDEF123456';mediaDraft.blob=new Blob(['photo'],{type:'image/jpeg'})",state.context);
  await state.context.sendChatMedia();assert.equal(uploads,1);assert.equal(prepares,1);assert.equal(vm.runInContext('mediaDraft.uploaded',state.context),true);
  await state.context.sendChatMedia();assert.equal(uploads,1);assert.equal(prepares,1);assert.equal(sends,2);assert.equal(refreshes,1);assert.equal(vm.runInContext('mediaDraft.entry',state.context),null);
+});
+
+test('pause time is excluded and cancellation while paused releases the microphone',async()=>{
+ assert.equal(model.elapsed(1000,11000,2000,8000),5);
+ assert.equal(model.clock(65),'01:05');
+ const state=setup();await state.context.startChatRecording('voice');
+ state.context.pauseChatRecording();assert.equal(vm.runInContext('mediaDraft.recorder.state',state.context),'paused');
+ state.context.pauseChatRecording();assert.equal(vm.runInContext('mediaDraft.recorder.state',state.context),'recording');
+ state.context.pauseChatRecording();state.context.cancelChatMedia();assert.equal(state.stops(),1);assert.equal(state.preview(),0);
+});
+
+test('video camera swap preserves the recording track and microphone; cancel stops all tracks',async()=>{
+ const state=setup(),c=state.context;let micStops=0,frontStops=0,rearStops=0,canvasStops=0;
+ const mic={stop(){micStops++}},front={stop(){frontStops++}},rear={stop(){rearStops++},getSettings:()=>({facingMode:'environment'})},canvas={stop(){canvasStops++}};
+ const stream=(video,audio=[])=>({getTracks:()=>[...video,...audio],getVideoTracks:()=>video,getAudioTracks:()=>audio});
+ const nodes=new Map();c.$=id=>{if(!nodes.has(id))nodes.set(id,{style:{setProperty(){}},classList:{add(){},remove(){},toggle(){}},play:()=>Promise.resolve(),readyState:2,videoWidth:640,videoHeight:480});return nodes.get(id)};
+ c.document.createElement=()=>({captureStream:()=>stream([canvas]),getContext:()=>({drawImage(){}})});
+ c.requestAnimationFrame=()=>1;c.cancelAnimationFrame=()=>{};c.MediaStream=function(tracks){return stream(tracks.filter(t=>t!==mic),tracks.filter(t=>t===mic))};
+ c.MediaRecorder.isTypeSupported=()=>true;let calls=0;c.navigator.mediaDevices.getUserMedia=async()=>++calls===1?stream([front],[mic]):stream([rear]);
+ await c.startChatRecording('video');assert.equal(state.created(),0);c.beginVideoRecording();
+ const recording=vm.runInContext('mediaDraft.recordStream',c);assert.equal(recording.getVideoTracks()[0],canvas);
+ await c.flipRecordingCamera();assert.equal(vm.runInContext('mediaDraft.recordStream',c),recording);assert.equal(micStops,0);assert.equal(frontStops,1);
+ c.cancelChatMedia();assert.equal(micStops,1);assert.equal(rearStops,1);assert.equal(canvasStops,1);
 });

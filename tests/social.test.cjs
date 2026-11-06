@@ -55,3 +55,31 @@ test('first-login profile gate leads only to settings and disappears after compl
  const markup=state.elements.get('#view').innerHTML;assert.ok(markup.includes('Сохранить и начать'));assert.equal(markup.includes('Экспортировать JSON'),true);
  state.context.window.ynSocial.profile.profile_completed=true;vm.runInContext("go('friends')",state.context);assert.equal(vm.runInContext('page',state.context),'friends');
 });
+
+test('messages list shows accepted contacts, unread counts, search and escaped names',()=>{
+ const context={window:{ynSync:{getUser:()=>null},ynNotify:{conversations:[{code:'BBBBBBBBBBBB',count:3}]},addEventListener(){}},setInterval(){},friendAvatar:()=>'',esc:s=>String(s??'').replaceAll('<','&lt;')};
+ vm.createContext(context);vm.runInContext(fs.readFileSync('social-ui.js','utf8'),context);context.friendAvatar=()=>'';
+ vm.runInContext("social.home={links:[{code:'AAAAAAAAAAAA',name:'Alice',status:'accepted'},{code:'BBBBBBBBBBBB',name:'<Bob>',status:'accepted'},{code:'CCCCCCCCCCCC',name:'Pending',status:'pending'},{code:'DDDDDDDDDDDD',name:'Blocked',status:'blocked'}]}",context);
+ let html=context.conversationList();assert.ok(html.indexOf('BBBBBBBBBBBB')<html.indexOf('AAAAAAAAAAAA'));assert.ok(html.includes('Непрочитанных: 3'));assert.ok(html.includes('&lt;Bob>'));assert.ok(!html.includes('Pending'));assert.ok(!html.includes('Blocked'));
+ vm.runInContext("social.search='alice'",context);html=context.conversationList();assert.ok(html.includes('Alice'));assert.ok(!html.includes('BBBBBBBBBBBB'));
+});
+test('friend action opens dedicated messages and returning to dialogs preserves draft',async()=>{
+ const fields=new Map([['#chatText',{value:'Draft for Alice'}],['#socialChat',{scrollIntoView(){}}]]);
+ const context={page:'friends',window:{ynSync:{getUser:()=>null},addEventListener(){}},document:{querySelectorAll:()=>[]},setInterval(){},$:id=>fields.get(id),go:p=>{context.page=p}};
+ vm.createContext(context);vm.runInContext(fs.readFileSync('social-ui.js','utf8'),context);
+ vm.runInContext("social.home={links:[{code:'AAAAAAAAAAAA',name:'Alice',status:'accepted'},{code:'BBBBBBBBBBBB',name:'Bob',status:'accepted'}]};social.chat=social.home.links[0]",context);
+ context.socialRender=()=>{};context.refreshFriendChat=async()=>{};
+ await context.openFriendChat('BBBBBBBBBBBB');assert.equal(context.page,'messages');assert.equal(vm.runInContext("social.drafts.AAAAAAAAAAAA",context),'Draft for Alice');assert.equal(vm.runInContext('social.chat.code',context),'BBBBBBBBBBBB');
+ fields.get('#chatText').value='Draft for Bob';context.closeFriendChat();assert.equal(vm.runInContext('social.chat',context),null);assert.equal(vm.runInContext('social.drafts.BBBBBBBBBBBB',context),'Draft for Bob');
+ context.window.ynSocial.reset=()=>{};
+});
+
+test('profile save supports the previous database signature without retrying permission errors',async()=>{
+ const calls=[];let denied=false;
+ const context={workspaceAccess:true,window:{ynSync:{getUser:()=>null},addEventListener(){}},setInterval(){}};
+ vm.createContext(context);vm.runInContext(fs.readFileSync('social-ui.js','utf8'),context);
+ vm.runInContext("social.home={profile:{code:'AAAAAAAAAAAA',profile_completed:true,bio:''}}",context);
+ context.socialRPC=async(name,args)=>{calls.push(args);if(denied)throw Error('permission denied');if('p_time_zone' in args)throw Error('Could not find the function public.yn_social_profile(p_avatar, p_bio, p_name, p_time_zone) in the schema cache')};
+ await context.publishSocialIdentity({name:'Alice',avatar:'',timeZone:'Asia/Tokyo'});assert.equal(calls.length,2);assert.equal('p_time_zone' in calls[1],false);
+ denied=true;await assert.rejects(()=>context.publishSocialIdentity({name:'Bob',avatar:''}),/permission denied/);assert.equal(calls.length,3);
+});
