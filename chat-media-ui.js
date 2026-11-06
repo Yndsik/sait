@@ -53,5 +53,5 @@ async function openUserProfile(code){
 
 function profileSchedulePreview(published){
  const entries=YndsiCommunity.publicEntries(published?.entries).filter(e=>Date.parse(e.startsAt)>=Date.now()-6*3600000).slice(0,6);const zone=currentTimeZone();
- return `<section class="profile-schedule"><h3>Расписание стримов</h3>${published?.token?`<p class="tiny">Время для тебя · ${esc(zone)}</p>${entries.map(e=>`<article><time>${esc(new Date(e.startsAt).toLocaleString('ru-RU',{timeZone:zone,weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}))}</time><b>${esc(e.title)}</b><span>${esc(e.game||'Игра пока не указана')}</span></article>`).join('')||'<p class="muted">Ближайших опубликованных эфиров пока нет.</p>'}`:'<p class="muted">Пользователь не опубликовал расписание.</p>'}</section>`;
+ return `<section class="profile-schedule"><h3>Расписание стримов</h3>${published?.token?`<p class="tiny">Время показано для тебя</p>${entries.map(e=>`<article><time>${esc(new Date(e.startsAt).toLocaleString('ru-RU',{timeZone:zone,weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}))}</time><b>${esc(e.title)}</b><span>${esc(e.game||'Игра пока не указана')}</span></article>`).join('')||'<p class="muted">Ближайших опубликованных эфиров пока нет.</p>'}`:'<p class="muted">Пользователь не опубликовал расписание.</p>'}</section>`;
 }

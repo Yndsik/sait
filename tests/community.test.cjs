@@ -13,9 +13,9 @@ test('notification baseline suppresses old alerts and preserves big message IDs'
 test('shared schedule viewer uses anonymous RPC and escapes displayed text',async()=>{
  let options,called;const elements=new Map();const get=id=>{if(!elements.has(id))elements.set(id,{innerHTML:'',addEventListener(){}});return elements.get(id)};
  const token='12345678-1234-1234-1234-123456789abc';
- const context={URLSearchParams,location:{search:'?s='+token},document:{getElementById:get,hidden:false},setInterval(){},YndsiProfile:require('../profile-model.js'),YndsiCommunity:model,window:{supabase:{createClient:(url,key,opts)=>{options=opts;return {rpc:async(name,args)=>{called={name,args};return {data:{name:'<script>unsafe</script>',entries:[{title:'Live',startsAt:'2030-01-01T15:00:00Z',description:'PRIVATE',plan:'PRIVATE'}]},error:null}}}}}}};
+ const context={URLSearchParams,location:{search:'?s='+token},document:{getElementById:get,hidden:false},setInterval(){},YndsiProfile:require('../profile-model.js'),YndsiCommunity:model,window:{supabase:{createClient:(url,key,opts)=>{options=opts;return {rpc:async(name,args)=>{called={name,args};return {data:{name:'<script>unsafe</script>',timeZone:'Pacific/Auckland',entries:[{title:'Live',startsAt:'2030-01-01T15:00:00Z',description:'PRIVATE',plan:'PRIVATE'}]},error:null}}}}}}};
  vm.createContext(context);vm.runInContext(fs.readFileSync('schedule-public.js','utf8'),context);await new Promise(setImmediate);
- assert.equal(options.auth.persistSession,false);assert.equal(options.auth.detectSessionInUrl,false);assert.equal(called.name,'yn_public_schedule');assert.equal(called.args.p_token,token);assert.ok(get('publicSchedule').innerHTML.includes('&lt;script&gt;'));assert.equal(get('publicSchedule').innerHTML.includes('PRIVATE'),false);
+ assert.equal(options.auth.persistSession,false);assert.equal(options.auth.detectSessionInUrl,false);assert.equal(called.name,'yn_public_schedule');assert.equal(called.args.p_token,token);assert.ok(get('publicSchedule').innerHTML.includes('&lt;script&gt;'));assert.equal(get('publicSchedule').innerHTML.includes('PRIVATE'),false);assert.equal(get('publicSchedule').innerHTML.includes('Pacific/Auckland'),false);assert.equal(get('publicSchedule').innerHTML.includes('Часовой пояс автора'),false);
 });
 test('revoking publication does not depend on saving the private workspace',async()=>{
  const calls=[];const context={workspaceAccess:false,profileForm:()=>'',window:{ynSocial:{reset(){}},ynSync:{getUser:()=>null,syncNow:async()=>false},addEventListener(){}},socialRPC:async(name,args)=>{calls.push({name,args});return {enabled:false,selected_ids:[],entries:[]}},$:()=>null,toast(){}};
@@ -34,5 +34,5 @@ test('profile schedule renders published fields in viewer timezone',()=>{
  const context={YndsiCommunity:model,currentTimeZone:()=> 'Asia/Tokyo',esc:s=>String(s).replaceAll('<','&lt;'),window:{ynSync:{getClient:()=>null}},document:{addEventListener(){}},go(){}};
  vm.createContext(context);vm.runInContext(fs.readFileSync('chat-media-ui.js','utf8'),context);
  const html=context.profileSchedulePreview({token:'12345678-1234-1234-1234-123456789abc',entries:[{title:'<Live>',game:'Game',startsAt:'2030-01-01T15:00:00Z',description:'PRIVATE',plan:'PRIVATE'}]});
- assert.ok(html.includes('Asia/Tokyo'));assert.ok(html.includes('&lt;Live>'));assert.ok(html.includes('00:00'));assert.ok(!html.includes('PRIVATE'));assert.ok(!context.profileSchedulePreview(null).includes('Live'));
+ assert.ok(!html.includes('Asia/Tokyo'));assert.ok(html.includes('Время показано для тебя'));assert.ok(html.includes('&lt;Live>'));assert.ok(html.includes('00:00'));assert.ok(!html.includes('PRIVATE'));assert.ok(!context.profileSchedulePreview(null).includes('Live'));
 });
