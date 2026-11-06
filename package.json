@@ -2,8 +2,8 @@
   "name": "yndsi-streamer-hub",
   "private": true,
   "scripts": {
-    "test": "node tests/steam.test.cjs && node tests/schedule.test.cjs",
-    "check": "node --check netlify/functions/steam.js && node --check steam-ui.js && node --check recommendations.js && node --check schedule-model.js && node --check schedule-ui.js"
+    "test": "node tests/steam.test.cjs && node tests/schedule.test.cjs && node tests/profile.test.cjs",
+    "check": "node --check netlify/functions/steam.js && node --check steam-ui.js && node --check recommendations.js && node --check schedule-model.js && node --check schedule-ui.js && node --check profile-model.js && node --check profile-ui.js"
   },
   "engines": {
     "node": ">=20"

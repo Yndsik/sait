@@ -21,14 +21,15 @@ body{background:radial-gradient(ellipse at 78% -10%,rgba(112,76,177,.22),transpa
 
 
 .cloudstatus{font-size:10px;color:#9ba9bd;padding:6px 9px;border:1px solid #293448;border-radius:20px;white-space:nowrap}.cloudstatus.ok{color:#78d9a4;border-color:#28513f}.cloudstatus.busy{color:#f0c56d;border-color:#5a4828}.authback{position:fixed;inset:0;z-index:100;background:rgba(3,6,12,.92);backdrop-filter:blur(18px);display:none;align-items:center;justify-content:center;padding:18px}.authback.show{display:flex}.authcard{width:min(440px,100%);background:linear-gradient(145deg,#171f2d,#101620);border:1px solid #39445a;border-radius:22px;padding:25px;box-shadow:0 25px 90px #0009}.authbrand{font:800 13px 'Space Grotesk';letter-spacing:3px;color:#b7a8f4}.authcard h2{font:700 27px 'Space Grotesk';margin:10px 0 5px}.authcard p{color:#8d9ab0;line-height:1.5;font-size:12px}.authform{display:grid;gap:10px;margin-top:18px}.authform .field{width:100%}.authswitch{display:flex;gap:7px;margin:17px 0 5px}.authswitch button{flex:1}.authmsg{font-size:11px;min-height:16px;color:#f0c56d;margin-top:10px}.authhint{font-size:10px!important;color:#75839a!important}.authuser{font-size:11px;color:#8d9ab0;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-</style></head><body>
+</style><link rel="stylesheet" href="vivid.css">
+</head><body>
 <div class="layout"><aside class="side" id="side"><div class="logo"><div class="mark">Y</div><div><b>YNDSI</b><small>CREATOR OS</small></div></div>
 <div class="navlabel">WORKSPACE</div><nav class="nav" id="nav">
 <button class="active" data-page="dashboard"><i>◈</i>Dashboard</button><button data-page="schedule"><i>▦</i>Расписание</button><button data-page="library"><i>⌕</i>Библиотека игр</button><button data-page="wishlist"><i>♡</i>Wishlist</button><button data-page="playing"><i>▣</i>Мои прохождения</button>
 <div class="navlabel">CREATOR TOOLS</div><button data-page="notes"><i>▤</i>Заметки и идеи</button><button data-page="tasks"><i>✓</i>Задачи</button><button data-page="streams"><i>◉</i>Управление стримами</button><button data-page="analytics"><i>⌁</i>Статистика</button>
 <div class="navlabel">SYSTEM</div><button data-page="settings"><i>⚙</i>Настройки</button></nav>
 <div class="sidefoot"><small>YOUR CREATOR SPACE</small><b style="display:block;margin:5px 0">Build your own story.</b><small>Версия 0.2 · Supabase Cloud</small></div></aside>
-<main class="main"><div class="top"><div class="row"><button class="btn mobile" onclick="document.getElementById('side').classList.toggle('open')">☰</button><span>YNDSI / <span id="crumb">Dashboard</span></span></div><div class="topright"><span id="today"></span><span id="cloudstatus" class="cloudstatus">Локально</span><button class="btn mini" id="accountbtn" onclick="window.ynSync&&window.ynSync.account()">Войти</button><div class="avatar">Y</div></div></div><div id="view"></div></main></div>
+<main class="main"><div class="top"><div class="row"><button class="btn mobile" onclick="document.getElementById('side').classList.toggle('open')">☰</button><span>YNDSI / <span id="crumb">Dashboard</span></span></div><div class="topright"><span id="today"></span><span id="cloudstatus" class="cloudstatus">Локально</span><button class="btn mini" id="accountbtn" onclick="window.ynSync&&window.ynSync.account()">Войти</button><button class="avatar" type="button" onclick="go('settings')" aria-label="Настроить профиль">Y</button></div></div><div id="view"></div></main></div>
 <div class="modalback" id="modalback"><div class="modal"><h2 id="modtitle">Добавить</h2><div id="modbody"></div><div class="modalactions"><button class="btn" onclick="closeModal()">Отмена</button><button class="btn primary" id="savebtn">Сохранить</button></div></div></div><div class="toast" id="toast"></div>
 <script>
 const $=s=>document.querySelector(s), today=new Date(Date.now()+5*60*60*1000).toISOString().slice(0,10);
@@ -138,5 +139,7 @@ render();
 <script src="steam-ui.js"></script>
 <script src="schedule-model.js"></script>
 <script src="schedule-ui.js"></script>
+<script src="profile-model.js"></script>
+<script src="profile-ui.js"></script>
 <style>.steamshots{display:flex;gap:10px;overflow:auto;max-width:100%;padding:12px 0}.steamshots img{width:240px;max-width:75vw;border-radius:10px}details summary{cursor:pointer;margin-top:12px;color:var(--cyan)}.toolbar label{flex:1;min-width:120px}.toolbar .field{max-width:100%}@media(max-width:600px){.game{flex-wrap:wrap}.gameinfo{min-width:100px}.toolbar{flex-wrap:wrap}.actions{flex-wrap:wrap}}@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}</style>
 </body></html>
