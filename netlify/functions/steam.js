@@ -1,3 +1,4 @@
+const {interests}=require('../../recommendations.js');
 const {normalize}=require('../../lib/steam.cjs');
 const cache=new Map(), pending=new Map();
 async function remote(url, ttl=900000) {
@@ -36,8 +37,11 @@ exports.handler=async event=>{
       const id=p.id||q;if(!/^[1-9]\d{0,9}$/.test(id))return reply(400,{error:'Некорректный App ID'});
       const game=await detail(id);return game?reply(200,{games:[game],total:1,page:1,hasMore:false}):reply(404,{error:'Игра не найдена в Steam'});
     }
+    if(p.tag&&!interests.some(i=>i.id===p.tag))return reply(400,{error:'Неизвестное направление'});
     const u=new URL('https://store.steampowered.com/search/results/');
-    Object.entries({term:q,start:(page-1)*12,count:12,json:1,infinite:1,category1:998,sort_by:p.gems==='1'?'Reviews_DESC':'_ASC',l:'russian',cc:'KZ'}).forEach(([k,v])=>u.searchParams.set(k,v));
+    if(p.tag)u.searchParams.set('tags',p.tag);
+    if(p.discovery==='1')u.searchParams.set('filter','popularnew');
+    Object.entries({term:q,start:(page-1)*12,count:12,json:1,infinite:1,category1:998,sort_by:p.discovery==='1'||p.gems==='1'?'Released_DESC':'_ASC',l:'russian',cc:'KZ'}).forEach(([k,v])=>u.searchParams.set(k,v));
     const result=await remote(u.toString(),300000);
     const ids=[...new Set([...String(result.results_html||'').matchAll(/data-ds-appid="(\d+)"/g)].map(m=>m[1]))].slice(0,12);
     // Bounded concurrency and partial failures; no full Steam database in the browser.
