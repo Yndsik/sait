@@ -12,11 +12,18 @@ begin
  (b,b::text||'@example.invalid','authenticated','authenticated',now(),now(),now()),
  (c,c::text||'@example.invalid','authenticated','authenticated',now(),now(),now()),
  (d,d::text||'@example.invalid','authenticated','authenticated',now(),now(),null);
+ if not exists(select 1 from yndsi_private.social_profiles where user_id=a) then raise exception 'FAIL: ID not assigned at invitation'; end if;
+ denied:=false;
+ begin update yndsi_private.social_profiles set code='000000000000' where user_id=a; exception when raise_exception then denied:=true; end;
+ if not denied then raise exception 'FAIL: ID changed'; end if;
  execute 'set local role authenticated';
  perform set_config('request.jwt.claim.sub',d::text,true); denied:=false;
  begin perform public.yn_social_home(); exception when raise_exception then denied:=true; end;
  if not denied then raise exception 'FAIL: uninvited account admitted'; end if;
  perform set_config('request.jwt.claim.sub',a::text,true); ac:=public.yn_social_home()->'profile'->>'code';
+ perform public.yn_social_profile('TestNickname','','');
+ if public.yn_social_home()->'profile'->>'code'<>ac then raise exception 'FAIL: ID changed on profile save'; end if;
+ if not (public.yn_social_home()->'profile'->>'profile_completed')::boolean then raise exception 'FAIL: onboarding not completed'; end if;
  perform set_config('request.jwt.claim.sub',b::text,true); bc:=public.yn_social_home()->'profile'->>'code';
  perform set_config('request.jwt.claim.sub',c::text,true); cc:=public.yn_social_home()->'profile'->>'code';
  -- A cannot access raw social tables or owner workspaces.
