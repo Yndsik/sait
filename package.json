@@ -2,8 +2,9 @@
   "name": "yndsi-streamer-hub",
   "private": true,
   "scripts": {
-    "test": "node tests/steam.test.cjs && node tests/schedule.test.cjs && node tests/profile.test.cjs && node tests/social.test.cjs && node tests/chat-media.test.cjs && node tests/community.test.cjs && node tests/pwa.test.cjs",
-    "check": "node --check netlify/functions/steam.js && node --check steam-ui.js && node --check recommendations.js && node --check schedule-model.js && node --check schedule-ui.js && node --check profile-model.js && node --check profile-ui.js && node --check social-ui.js && node --check chat-media-model.js && node --check chat-media-ui.js && node --check recorder-ui.js && node --check ui-icons.js && node --check community-model.js && node --check schedule-sharing-ui.js && node --check schedule-public.js && node --check notifications-ui.js && node --check pwa-ui.js && node --check sw.js"
+    "build": "node scripts/build.cjs",
+    "test": "node tests/steam.test.cjs && node tests/schedule.test.cjs && node tests/profile.test.cjs && node tests/social.test.cjs && node tests/chat-media.test.cjs && node tests/community.test.cjs && node tests/pwa.test.cjs && node tests/security.test.cjs",
+    "check": "node --check netlify/functions/steam.js && node --check steam-ui.js && node --check recommendations.js && node --check schedule-model.js && node --check schedule-ui.js && node --check profile-model.js && node --check profile-ui.js && node --check social-ui.js && node --check chat-media-model.js && node --check chat-media-ui.js && node --check recorder-ui.js && node --check ui-icons.js && node --check community-model.js && node --check schedule-sharing-ui.js && node --check schedule-public.js && node --check notifications-ui.js && node --check pwa-ui.js && node --check sw.js && node --check auth-captcha.js && node --check scripts/build.cjs"
   },
   "engines": {
     "node": ">=20"
