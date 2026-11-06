@@ -83,3 +83,11 @@ test('profile save supports the previous database signature without retrying per
  await context.publishSocialIdentity({name:'Alice',avatar:'',timeZone:'Asia/Tokyo'});assert.equal(calls.length,2);assert.equal('p_time_zone' in calls[1],false);
  denied=true;await assert.rejects(()=>context.publishSocialIdentity({name:'Bob',avatar:''}),/permission denied/);assert.equal(calls.length,3);
 });
+
+test('registration passes CAPTCHA token to Supabase and blocks submission without a valid challenge',async()=>{
+ const state=setup(false,false);await new Promise(setImmediate);state.context.window.ynSync.setMode('signup');
+ state.elements.get('#authNickname').value='Alice';state.context.window.ynCaptcha={getToken(){throw Error('Solve CAPTCHA')},reset(){}};
+ await state.elements.get('#authform').handlers.submit({preventDefault(){}});assert.equal(state.signup(),undefined);assert.equal(state.elements.get('#authmsg').textContent,'Solve CAPTCHA');
+ let reset=0;state.context.window.ynCaptcha={getToken:()=> 'verified-token',reset(){reset++}};
+ await state.elements.get('#authform').handlers.submit({preventDefault(){}});assert.equal(state.signup().options.captchaToken,'verified-token');assert.equal(reset,1);assert.equal(state.elements.get('#authsubmit').disabled,false);
+});
