@@ -1,0 +1,7 @@
+(function(root){
+ const prefix='🎮 Советую игру: ',hosts=new Set(['shared.akamai.steamstatic.com','shared.fastly.steamstatic.com','shared.cloudflare.steamstatic.com','shared.steamstatic.com','cdn.akamai.steamstatic.com','cdn.cloudflare.steamstatic.com','cdn.fastly.steamstatic.com','steamcdn-a.akamaihd.net','media.steampowered.com']);
+ function appId(value){const raw=String(value??'');if(!/^[1-9][0-9]{0,9}$/.test(raw))return null;const id=Number(raw);return Number.isSafeInteger(id)&&id<=4294967295?id:null}
+ function parse(body){if(typeof body!=='string'||body.length>2000||!body.startsWith(prefix))return null;const lines=body.slice(prefix.length).split('\n'),match=lines.at(-1)?.match(/^https:\/\/store\.steampowered\.com\/app\/([1-9][0-9]{0,9})\/$/),id=match?appId(match[1]):null;const title=(id?lines.slice(0,-1):lines).join(' ').trim().slice(0,150);return title?{title,appId:id}:null}
+ function coverURL(value,id){id=appId(id);if(!id||typeof value!=='string'||value.length>1024)return null;try{const url=new URL(value);if(url.protocol!=='https:'||url.username||url.password||url.port||url.hash||!hosts.has(url.hostname))return null;const path=new RegExp('^/(?:store_item_assets/)?steam/apps/'+id+'/(?:[A-Za-z0-9_-]+/){0,4}[A-Za-z0-9_-]+\\.(?:jpe?g|png|webp|avif)$','i');return path.test(url.pathname)?url.href:null}catch{return null}}
+ const api={parse,appId,coverURL};if(typeof module==='object'&&module.exports)module.exports=api;root.RivloSharedGame=api;
+})(typeof globalThis!=='undefined'?globalThis:this);
