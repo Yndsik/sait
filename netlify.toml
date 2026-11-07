@@ -39,3 +39,14 @@
   for = "/auth-config.js"
   [headers.values]
     Cache-Control = "no-store"
+
+[[headers]]
+  for = "/downloads/*.apk"
+  [headers.values]
+    Content-Type = "application/vnd.android.package-archive"
+    Content-Disposition = "attachment; filename=YNDSI-Android-test-1.0.apk"
+    Cache-Control = "public, max-age=3600"
+[[headers]]
+  for = "/downloads/android.json"
+  [headers.values]
+    Cache-Control = "no-cache"

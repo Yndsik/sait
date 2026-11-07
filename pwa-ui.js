@@ -1,5 +1,5 @@
 (()=>{
- let prompt=null;
+ let prompt=null;if(window.Capacitor?.isNativePlatform?.())document.documentElement.classList.add('native-app');
  const standalone=()=>window.Capacitor?.isNativePlatform?.()||window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
  function installPanel(){return `<section class="card install-panel"><div><span class="eyebrow">YNDSI С СОБОЙ</span><h2>Как приложение на телефоне</h2><p class="muted">${standalone()?'Ты уже открыл YNDSI с главного экрана.':'Добавь YNDSI на главный экран: своя иконка и отдельное окно.'}</p></div><button class="btn primary" type="button" onclick="ynInstall.open()">${standalone()?'Об установленной версии':'Установить на телефон'}</button><p class="tiny">Для переписки и синхронизации нужен интернет. Сайт и установленная версия используют один аккаунт; при первом открытии может понадобиться вход.</p></section>`}
  function close(){document.getElementById('installDialog')?.close()}
@@ -10,7 +10,7 @@
   if(!dialog.open)dialog.showModal();
  }
  window.ynInstall={open};
- const before=settings;settings=function(){return installPanel()+before()};
+ const before=settings;settings=function(){return (window.Capacitor?.isNativePlatform?.()?'':'<section class="card install-panel"><span class="eyebrow">ПРИЛОЖЕНИЕ ДЛЯ ANDROID</span><h2>YNDSI теперь на Android</h2><p class="muted">Первая тестовая версия доступна только на Android. Бесплатный APK, Android 7.0+.</p><a class="btn primary" href="/android.html">Скачать для Android</a></section>')+installPanel()+before()};
  window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();prompt=event});
  window.addEventListener('appinstalled',()=>{prompt=null;if(typeof page!=='undefined'&&page==='settings')render()});
  if('serviceWorker' in navigator&&location.protocol==='https:')window.addEventListener('load',()=>{navigator.serviceWorker.register('/sw.js',{updateViaCache:'none'}).catch(()=>{})});
