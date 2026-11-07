@@ -171,6 +171,7 @@ render();
   function acceptAuthSession(session){const key=session?.access_token||session?.user?.id||'signed-out';if(pendingAuthKey===key)return;pendingAuthKey=key;setTimeout(async()=>{try{await onSession(session)}finally{if(pendingAuthKey===key)pendingAuthKey=null}},0)}
   async function init(){
     if(!window.supabase?.createClient){setStatus('Нет библиотеки');document.getElementById('authmsg').textContent='Не загрузилась библиотека Supabase. Проверь подключение к интернету и обнови страницу.';showAuth(true);return}
+    const callbackParams=typeof URLSearchParams==='undefined'?{get:()=>null}:new URLSearchParams((location.hash||'').slice(1)),queryParams=typeof URLSearchParams==='undefined'?{get:()=>null}:new URLSearchParams(location.search||''),callbackError=callbackParams.get('error')||queryParams.get('error')||callbackParams.get('error_code')||queryParams.get('error_code'),confirmationLink=callbackParams.get('type')==='signup';
     const flow=window.ynAuthFlow;client=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,flow?{auth:{persistSession:false,autoRefreshToken:true,detectSessionInUrl:true}}:undefined);
     client.auth.onAuthStateChange((event,session)=>{
       if(flow?.handleEvent(event,session)){showAuth(true);return}flow?.saveEvent(event,session);
@@ -178,11 +179,13 @@ render();
       if(event==='TOKEN_REFRESHED'||event==='USER_UPDATED'){user=session?.user||user;return}
       if(event==='SIGNED_IN'&&workspaceAccess&&user?.id===session?.user?.id)return;acceptAuthSession(session);
     });
-    let {data:{session}}=await client.auth.getSession();
+    let {data:{session},error:sessionError}=await client.auth.getSession();
+    if(callbackError||confirmationLink||sessionError){const clean=new URL(location.href);for(const key of ['error','error_code','error_description','code'])clean.searchParams.delete(key);if(callbackError||confirmationLink)clean.hash='';history.replaceState(null,'',clean.pathname+clean.search+clean.hash)}
+    if(flow&&(callbackError||sessionError)&&!session){authInitializing=false;showAuth(true);flow.linkResult(true);return}
     const recoveryURL=typeof URLSearchParams!=='undefined'&&new URLSearchParams(location.search||'').get('recovery')==='1';
     if(flow&&(recoveryURL||flow.isRecovery())){authInitializing=false;flow.adoptRecovery(session);showAuth(true);return}
     if(flow&&!session){const existing=flow.storage.load(),legacy=flow.storage.migrate('sb-ougbjjfrxfokyqqriqtx-auth-token'),saved=existing||legacy;if(saved?.access_token&&saved.refresh_token){const restored=await client.auth.setSession({access_token:saved.access_token,refresh_token:saved.refresh_token});if(restored.error)flow.storage.clear();else session=restored.data.session}}
-    authInitializing=false;await onSession(session);
+    authInitializing=false;await onSession(session);if(confirmationLink){if(session&&workspaceAccess)toast('Почта подтверждена. Добро пожаловать в YNDSI!');else flow?.linkResult(false)}
   }
   let authPending=false;
   document.getElementById('authform').addEventListener('submit',async e=>{
