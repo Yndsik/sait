@@ -46,8 +46,10 @@ test('video camera swap preserves the recording track and microphone; cancel sto
  c.document.createElement=()=>({captureStream:()=>stream([canvas]),getContext:()=>({drawImage(){}})});
  c.requestAnimationFrame=()=>1;c.cancelAnimationFrame=()=>{};c.MediaStream=function(tracks){return stream(tracks.filter(t=>t!==mic),tracks.filter(t=>t===mic))};
  c.MediaRecorder.isTypeSupported=()=>true;let calls=0;c.navigator.mediaDevices.getUserMedia=async()=>++calls===1?stream([front],[mic]):stream([rear]);
- await c.startChatRecording('video');assert.equal(state.created(),0);c.beginVideoRecording();
+ await c.startChatRecording('video');assert.equal(state.created(),1);assert.equal(vm.runInContext('mediaDraft.recorder.state',c),'recording');c.beginVideoRecording();assert.equal(state.created(),1);
  const recording=vm.runInContext('mediaDraft.recordStream',c);assert.equal(recording.getVideoTracks()[0],canvas);
  await c.flipRecordingCamera();assert.equal(vm.runInContext('mediaDraft.recordStream',c),recording);assert.equal(micStops,0);assert.equal(frontStops,1);
  c.cancelChatMedia();assert.equal(micStops,1);assert.equal(rearStops,1);assert.equal(canvasStops,1);
 });
+
+test('cancelling video while permission is pending prevents automatic recording and stops late tracks',async()=>{let grant;const state=setup(()=>new Promise(resolve=>{grant=resolve}));state.context.MediaRecorder.isTypeSupported=()=>true;const pending=state.context.startChatRecording('video');state.context.cancelChatMedia();grant(state.stream);await pending;assert.equal(state.stops(),1);assert.equal(state.created(),0)});
