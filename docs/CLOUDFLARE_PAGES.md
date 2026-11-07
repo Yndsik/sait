@@ -28,7 +28,7 @@ Accounts, messages, IDs, shared schedules and cloud-synced workspace data stay i
 
 ## Android and installed web apps
 
-The current downloadable APK still points at the old Netlify origin. Rebuild/sign it with the established signing key after the actual new URL is known, then publish updated release metadata/checksum. Do not silently claim the existing APK has moved. Existing installed PWA shortcuts also keep the old origin; install a new shortcut from the new URL. The web site itself is usable on both iPhone and Android immediately after configuration and verification.
+The current downloadable APK is version 1.1 and points at `https://yndsi-streamer-hub.pages.dev`. It was signed with the same certificate as 1.0 and can update that app in place. A new sign-in may be needed because the website origin changed; cloud data stays in the same account. See ANDROID_APK.md for verification and device-test limits. Existing installed PWA shortcuts still keep the old origin; install a new shortcut from the Cloudflare URL.
 
 ## Architecture
 

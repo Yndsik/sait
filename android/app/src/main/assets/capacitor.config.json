@@ -1,0 +1,17 @@
+{
+	"appId": "app.yndsi.hub",
+	"appName": "YNDSI",
+	"webDir": "mobile-shell",
+	"server": {
+		"url": "https://yndsi-streamer-hub.pages.dev",
+		"cleartext": false,
+		"allowNavigation": [
+			"yndsi-streamer-hub.pages.dev"
+		],
+		"errorPath": "offline.html"
+	},
+	"android": {
+		"allowMixedContent": false,
+		"webContentsDebuggingEnabled": false
+	}
+}
