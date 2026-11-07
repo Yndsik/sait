@@ -1,5 +1,5 @@
 // Cache only the generic offline page. Account data, chat media and app pages always use the network.
-const OFFLINE_CACHE='yndsi-offline-v1';
+const OFFLINE_CACHE='yndsi-offline-v2-rivlo';
 self.addEventListener('install',event=>{event.waitUntil(caches.open(OFFLINE_CACHE).then(cache=>cache.add('/offline.html')).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key.startsWith('yndsi-offline-')&&key!==OFFLINE_CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim()))});
 self.addEventListener('fetch',event=>{
