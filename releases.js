@@ -1,0 +1,13 @@
+(function(root){const releases=[{
+ version:'2.0.0',date:'2026-11-08',title:'Знакомься, RIVLO',titleEn:'Meet RIVLO',
+ summary:'Новое имя. Твой прежний круг. Больше способов играть, общаться и быть на связи.',summaryEn:'A new name. Your familiar circle. More ways to play, stream and stay connected.',
+ sections:[
+ {icon:'✦',title:'Новый характер',titleEn:'A fresh identity',text:'YNDSI стал RIVLO: новый знак, оформление, живые переходы и анимации. Аккаунты, постоянные ID, друзья и библиотека сохраняются.',textEn:'YNDSI is now RIVLO: a new logo, visual style and motion. Accounts, permanent IDs, friends and game libraries stay with you.'},
+ {icon:'↗',title:'Игры ближе',titleEn:'Games, together',text:'Делись игрой с другом: обложка прямо в сообщении и карточка с подробностями внутри RIVLO. Добавление в коллекцию — отдельным нажатием.',textEn:'Share games with friends: covers in messages and detailed game cards inside RIVLO. Adding to your collection stays a separate action.'},
+ {icon:'♡',title:'Свой круг зрителей',titleEn:'Your audience',text:'Подписки на расписания, число подписчиков в профиле и напоминания в день эфира по твоему времени.',textEn:'Schedule subscriptions, subscriber counts on profiles and stream-day reminders in your time zone.'},
+ {icon:'♫',title:'Слышно и видно',titleEn:'Stay in the loop',text:'Звук сообщений и напоминаний с выключателем и проверкой. Общий онлайн, включая гостей, теперь в боковом меню.',textEn:'Message and reminder sounds with mute and a test button. Site-wide activity, including guests, now lives in the sidebar.'},
+ {icon:'◈',title:'Игровой радар',titleEn:'Gaming radar',text:'Новости, обновления игр, скидки Steam и ссылки на официальные распродажи. Публичный просмотр без обязательного входа.',textEn:'Gaming news, updates, Steam deals and official sale links. Explore public pages without signing in.'},
+ {icon:'✓',title:'Профиль стримера',titleEn:'Creator profiles',text:'Подтверждение владения каналом, удобная проверка заявок владельцем прямо на сайте, планирование по нажатию на дату, голосовые и видеокружки с предпросмотром перед отправкой.',textEn:'Channel ownership verification, an on-site review panel for the site owner, click-to-plan calendar dates, and voice/video previews before sending.'}
+ ],
+ note:'Напоминания и звук работают, пока сайт открыт. Общий онлайн — приблизительное число активных браузеров. Название установленной Android APK пока может отображаться как YNDSI.',noteEn:'Reminders and sounds work while the site is open. Site activity is an approximate count of active browsers. The installed Android APK may still be named YNDSI.'
+}];if(typeof module==='object'&&module.exports)module.exports=releases;root.RivloReleases=releases})(typeof globalThis!=='undefined'?globalThis:this);

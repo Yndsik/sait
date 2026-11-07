@@ -1,17 +1,32 @@
 {
   "id": "/",
-  "name": "YNDSI — Streamer Hub",
-  "short_name": "YNDSI",
+  "name": "RIVLO — игры, стримы и друзья",
+  "short_name": "RIVLO",
   "description": "Игры, расписание стримов и общение с друзьями",
   "lang": "ru",
   "start_url": "/?source=homescreen",
   "scope": "/",
   "display": "standalone",
   "background_color": "#090c12",
-  "theme_color": "#090c12",
+  "theme_color": "#101b25",
   "icons": [
-    {"src":"/icons/app-192.png","sizes":"192x192","type":"image/png","purpose":"any"},
-    {"src":"/icons/app-512.png","sizes":"512x512","type":"image/png","purpose":"any"},
-    {"src":"/icons/app-maskable-512.png","sizes":"512x512","type":"image/png","purpose":"maskable"}
+    {
+      "src": "/icons/rivlo-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/rivlo-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/rivlo-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ]
 }
