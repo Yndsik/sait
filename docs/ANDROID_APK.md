@@ -30,3 +30,9 @@ npm run mobile:build
 assembleDebug выполнен успешно (93 Gradle tasks). apksigner verify подтвердил подпись APK v2; aapt подтвердил app.yndsi.hub, minSdk 24 и targetSdk 36. Размер около 3.9 МБ. SHA-256: e43acfe3e63695b04defeac451a4ff0d0e468fb485e4938ecf5e8f7628b6ea7a.
 
 Установка и реальная работа CAPTCHA/камеры на устройстве пока не проверены. Этот APK — тестовый debug, для выпуска и стабильных обновлений нужен сохраняемый приватный release-keystore (без обязательной оплаты магазина).
+
+## Скачивание с сайта
+
+Открытая страница /android.html и кнопки внизу сайта, на форме входа и в настройках ведут на /downloads/yndsi-android-test-1.0.apk. Регистрация не требуется. В нативной оболочке рекламный блок скрыт. Netlify отдаёт APK с application/vnd.android.package-archive и Content-Disposition attachment.
+
+Сборка проверяет размер и SHA-256 против downloads/android.json до публикации. При замене APK обновить версию/имя файла, метаданные и ссылки. Не публиковать изменённый файл под видом старой проверенной версии. Подпись и новый APK потребуются отдельно от обычных изменений сайта.
