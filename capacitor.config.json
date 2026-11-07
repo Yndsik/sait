@@ -1,0 +1,17 @@
+{
+  "appId": "app.yndsi.hub",
+  "appName": "YNDSI",
+  "webDir": "mobile-shell",
+  "server": {
+    "url": "https://reliable-unicorn-7ce032.netlify.app",
+    "cleartext": false,
+    "allowNavigation": [
+      "reliable-unicorn-7ce032.netlify.app"
+    ],
+    "errorPath": "offline.html"
+  },
+  "android": {
+    "allowMixedContent": false,
+    "webContentsDebuggingEnabled": false
+  }
+}

@@ -91,3 +91,12 @@ test('registration passes CAPTCHA token to Supabase and blocks submission withou
  let reset=0;state.context.window.ynCaptcha={getToken:()=> 'verified-token',reset(){reset++}};
  await state.elements.get('#authform').handlers.submit({preventDefault(){}});assert.equal(state.signup().options.captchaToken,'verified-token');assert.equal(reset,1);assert.equal(state.elements.get('#authsubmit').disabled,false);
 });
+
+test('messenger composer preserves drafts and only submits Enter on desktop outside IME composition',()=>{
+ let submitted=0,prevented=0;const text={value:'Draft',style:{},scrollHeight:230};
+ const context={window:{ynSync:{getUser:()=>null},addEventListener(){},matchMedia:()=>({matches:true})},setInterval(){},$:id=>id==='#chatForm'?{requestSubmit(){submitted++}}:id==='#chatSend'?{disabled:false}:null};
+ vm.createContext(context);vm.runInContext(fs.readFileSync('social-ui.js','utf8'),context);vm.runInContext("social.chat={code:'AAAAAAAAAAAA'}",context);
+ context.resizeChatComposer(text);assert.equal(text.style.height,'144px');assert.equal(vm.runInContext('social.drafts.AAAAAAAAAAAA',context),'Draft');
+ const event={key:'Enter',shiftKey:false,isComposing:false,preventDefault(){prevented++}};context.chatComposerKey(event);assert.equal(submitted,1);assert.equal(prevented,1);
+ context.chatComposerKey({...event,shiftKey:true});context.chatComposerKey({...event,isComposing:true});context.window.matchMedia=()=>({matches:false});context.chatComposerKey(event);assert.equal(submitted,1);
+});
