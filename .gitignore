@@ -13,3 +13,7 @@ ios/App/build/
 *.jks
 *.p12
 *.mobileprovision
+
+.wrangler/
+.dev.vars
+.dev.vars.*

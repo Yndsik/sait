@@ -1,0 +1,14 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "yndsi-streamer-hub",
+  "pages_build_output_dir": "./dist",
+  "compatibility_date": "2025-10-01",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "vars": {
+    "SUPABASE_URL": "https://ougbjjfrxfokyqqriqtx.supabase.co",
+    "SUPABASE_PUBLISHABLE_KEY": "sb_publishable_RsLwYdTNBY67roAFE1r1Bg_9I_pqCzU",
+    "TURNSTILE_SITE_KEY": "0x4AAAAAAF222aTfSHay4RPM"
+  }
+}
