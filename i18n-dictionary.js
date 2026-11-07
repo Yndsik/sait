@@ -102,7 +102,7 @@
  "Время": "Time",
  "Моё местное время": "My local time",
  "Публичное расписание": "Public schedule",
- "Показаны только эфиры, которые пользователь решил опубликовать.": "Only streams selected for sharing by the user are shown."
+ "Показаны только эфиры, которые пользователь решил опубликовать.": "Only streams selected for sharing by the user are shown.",
 
 '↓ Скачать APK':'↓ Download APK',
 };const ru={Dashboard:'Главная',Wishlist:'Хочу пройти','YOUR CONTROL ROOM':'ТВОЯ ПАНЕЛЬ УПРАВЛЕНИЯ','UP NEXT':'СЛЕДУЮЩИЙ ЭФИР','YOUR FOCUS':'ТВОЙ ФОКУС','IN PROGRESS':'В ПРОЦЕССЕ','QUICK THOUGHTS':'БЫСТРЫЕ МЫСЛИ','QUICK ACTIONS':'БЫСТРЫЕ ДЕЙСТВИЯ','STEAM DATABASE':'КАТАЛОГ STEAM','Invalid login credentials':'Неверная почта или пароль.','Email not confirmed':'Сначала подтверди почту.','User already registered':'Аккаунт с этой почтой уже существует.'};const api={en,ru};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.YndsiTranslations=api})(globalThis);
