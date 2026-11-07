@@ -49,3 +49,5 @@ function openStreamIndex(index){if(db.streams[index])openModal('stream',db.strea
 render();
 
 function updateStreamDST(saved){const panel=$('#streamDST');if(!panel)return;try{const choices=YndsiSchedule.resolve($('#stream-date').value,$('#stream-time').value,currentTimeZone());panel.style.display=choices.length>1?'grid':'none';if(saved&&choices.length>1)$('#streamOccurrence').value=Date.parse(saved)===Date.parse(choices[choices.length-1])?'later':'earlier'}catch{panel.style.display='none'}}
+
+function planStreamDate(date){if(!/^\d{4}-\d{2}-\d{2}$/.test(date))return;openModal('stream');const field=document.getElementById('stream-date');if(field){field.value=date;updateStreamDST();document.getElementById('streamTitle')?.focus()}}
