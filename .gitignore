@@ -2,3 +2,14 @@
 dist/
 .env
 .env.*
+
+node_modules/
+android/.gradle/
+android/local.properties
+android/**/build/
+ios/App/Pods/
+ios/App/build/
+*.keystore
+*.jks
+*.p12
+*.mobileprovision

@@ -37,7 +37,7 @@ async function flipRecordingCamera(){
 }
 function pauseChatRecording(){const recorder=mediaDraft.recorder;if(!recorder)return;const now=Date.now();if(recorder.state==='recording'&&recorder.pause){mediaDraft.pausedSince=now;recorder.pause();$('#mediaPause').innerHTML=recorderIcon('play')+' Продолжить'}else if(recorder.state==='paused'&&recorder.resume){mediaDraft.pausedMs+=now-mediaDraft.pausedSince;mediaDraft.pausedSince=0;recorder.resume();$('#mediaPause').innerHTML=recorderIcon('pause')+' Пауза'}updateRecordingVisual()}
 stopChatRecording=function(){const recorder=mediaDraft.recorder;if(!recorder||!['recording','paused'].includes(recorder.state))return;mediaDraft.duration=Math.min(mediaDraft.kind==='voice'?120:30,Math.max(.1,activeRecordingSeconds()));recorder.stop();stopMediaTracks();if($('#mediaStop'))$('#mediaStop').hidden=true};
-const beforeRecorderPreview=showMediaPreview;showMediaPreview=function(){beforeRecorderPreview();for(const id of ['mediaBegin','mediaFlip','mediaPause'])if($('#'+id))$('#'+id).hidden=true;if($('#mediaAgain'))$('#mediaAgain').hidden=false;if($('#mediaCaption'))$('#mediaCaption').hidden=false;enhanceVoicePlayer($('#mediaPreview'))};
+const beforeRecorderPreview=showMediaPreview;showMediaPreview=function(){beforeRecorderPreview();for(const id of ['mediaBegin','mediaFlip','mediaPause'])if($('#'+id))$('#'+id).hidden=true;if($('#mediaAgain'))$('#mediaAgain').hidden=false;if($('#mediaCaption'))$('#mediaCaption').hidden=false;enhanceChatPlayers($('#mediaPreview'))};
 function enhanceVoicePlayer(box){const audio=box?.querySelector?.('audio');if(!audio||audio.dataset.enhanced)return;audio.dataset.enhanced='1';const ui=document.createElement('div');ui.className='voice-player';ui.innerHTML=`<button class="voice-play btn" aria-label="Воспроизвести голосовое">${recorderIcon('play')}</button><div class="voice-body"><div class="voice-bars" aria-hidden="true">${'<i></i>'.repeat(22)}</div><input class="voice-seek" type="range" min="0" max="1000" value="0" aria-label="Перемотать голосовое"><small class="voice-time">00:00</small></div><button class="btn mini voice-speed" aria-label="Скорость воспроизведения">1×</button>`;box.insertBefore(ui,audio);audio.controls=false;audio.hidden=true;const play=ui.querySelector('.voice-play'),seek=ui.querySelector('.voice-seek'),time=ui.querySelector('.voice-time'),speed=ui.querySelector('.voice-speed');
  play.onclick=async()=>{try{if(audio.paused)await audio.play();else audio.pause()}catch{time.textContent='Обнови доступ к файлу'}};
  const update=()=>{const ratio=Number.isFinite(audio.duration)&&audio.duration>0?audio.currentTime/audio.duration:0;seek.value=String(Math.round(ratio*1000));ui.style.setProperty('--play-progress',ratio);time.textContent=YndsiMedia.clock(audio.currentTime)+' / '+YndsiMedia.clock(Number.isFinite(audio.duration)?audio.duration:0)};
@@ -46,6 +46,19 @@ function enhanceVoicePlayer(box){const audio=box?.querySelector?.('audio');if(!a
  seek.oninput=()=>{if(Number.isFinite(audio.duration))audio.currentTime=Number(seek.value)/1000*audio.duration};speed.onclick=()=>{audio.playbackRate=audio.playbackRate===1?1.5:audio.playbackRate===1.5?2:1;speed.textContent=audio.playbackRate+'×'};update();
 }
 async function expandChatVideo(id){const item=social.messages.find(m=>m.attachment?.id===id)?.attachment;if(!item||item.kind!=='video')return;const generation=social.generation;let dialog=document.getElementById('videoViewerDialog');if(!dialog){dialog=document.createElement('dialog');dialog.id='videoViewerDialog';dialog.className='media-dialog video-viewer';document.body.appendChild(dialog);dialog.addEventListener('close',()=>dialog.querySelector('video')?.pause());dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close()})}dialog.innerHTML='<p>Загружаем видео…</p><form method="dialog"><button class="btn">Закрыть</button></form>';if(!dialog.open)dialog.showModal();try{const {data,error}=await window.ynSync.getClient().storage.from('chat-media').createSignedUrl(item.path,120);if(error)throw error;if(generation!==social.generation||!dialog.open)return;dialog.innerHTML=`<video src="${esc(data.signedUrl)}" controls playsinline preload="metadata"></video><form method="dialog"><button class="btn">Закрыть</button></form>`}catch(e){if(dialog.open)dialog.querySelector('p').textContent=e.message}}
-window.ynRecorder={enhance:enhanceVoicePlayer};
+window.ynRecorder={enhance:enhanceChatPlayers};
 
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&mediaDraft.kind==='video'&&!mediaDraft.recorder)resetChatMedia()});
+
+function enhanceChatPlayers(box){
+ enhanceVoicePlayer(box);
+ for(const video of box?.querySelectorAll?.('video.circle-video')||[]){
+  if(video.dataset.roundEnhanced)continue;video.dataset.roundEnhanced='1';
+  const frame=document.createElement('div');frame.className='round-playback';box.insertBefore(frame,video);frame.appendChild(video);
+  const time=document.createElement('span');time.className='round-playback-time';time.setAttribute('aria-hidden','true');frame.appendChild(time);
+  const update=()=>{const duration=video.duration,progress=Number.isFinite(duration)&&duration>0?video.currentTime/duration:0;frame.style.setProperty('--round-progress',String(progress));time.textContent=YndsiMedia.clock(video.currentTime)};
+  for(const event of ['timeupdate','loadedmetadata','seeked'])video.addEventListener(event,update);
+  video.addEventListener('play',()=>{frame.classList.add('is-playing');for(const player of document.querySelectorAll('audio,video'))if(player!==video)player.pause()});
+  for(const event of ['pause','ended'])video.addEventListener(event,()=>frame.classList.remove('is-playing'));update();
+ }
+}

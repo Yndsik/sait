@@ -1,6 +1,6 @@
 (()=>{
  let prompt=null;
- const standalone=()=>window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+ const standalone=()=>window.Capacitor?.isNativePlatform?.()||window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
  function installPanel(){return `<section class="card install-panel"><div><span class="eyebrow">YNDSI С СОБОЙ</span><h2>Как приложение на телефоне</h2><p class="muted">${standalone()?'Ты уже открыл YNDSI с главного экрана.':'Добавь YNDSI на главный экран: своя иконка и отдельное окно.'}</p></div><button class="btn primary" type="button" onclick="ynInstall.open()">${standalone()?'Об установленной версии':'Установить на телефон'}</button><p class="tiny">Для переписки и синхронизации нужен интернет. Сайт и установленная версия используют один аккаунт; при первом открытии может понадобиться вход.</p></section>`}
  function close(){document.getElementById('installDialog')?.close()}
  async function open(){
