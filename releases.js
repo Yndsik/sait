@@ -1,4 +1,9 @@
 (function(root){const releases=[{
+ version:'2.0.1',date:'2026-11-08',title:'Галочка на своём месте',titleEn:'Verification, where it belongs',
+ summary:'Подтверждённый канал теперь видно рядом с ником в профиле и общении.',summaryEn:'Verified channels are now clearly marked across profiles and conversations.',
+ sections:[{icon:'✓',title:'Видимый статус',titleEn:'Visible verification',text:'Галочка появилась в «Моём профиле», предпросмотре профиля, друзьях, поиске людей и диалогах. Рядом с ником она отображается только после подтверждения канала.',textEn:'Badges now appear on your own profile, previews, friends, people search and conversations, only after channel approval.'},{icon:'↻',title:'Обновление без лишних действий',titleEn:'Changes stay in sync',text:'После выдачи или снятия галочки статус обновляется. В настройках профиля добавлена кнопка проверки статуса. Черновики сообщений сохраняются.',textEn:'Approvals and revocations update without losing message drafts. Profile settings now include a verification status refresh button.'}],
+ note:'Отправка заявки сама по себе не выдаёт галочку. Владелец сайта должен проверить код в описании канала и подтвердить заявку.',noteEn:'Submitting a request does not issue a badge. The site owner must check the proof in your channel description and approve it.'
+},{
  version:'2.0.0',date:'2026-11-08',title:'Знакомься, RIVLO',titleEn:'Meet RIVLO',
  summary:'Новое имя. Твой прежний круг. Больше способов играть, общаться и быть на связи.',summaryEn:'A new name. Your familiar circle. More ways to play, stream and stay connected.',
  sections:[
