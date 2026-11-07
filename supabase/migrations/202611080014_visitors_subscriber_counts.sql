@@ -65,4 +65,27 @@ end $$;
 revoke all on function public.yn_release_claim(text) from public,anon;
 grant execute on function public.yn_release_claim(text) to authenticated;
 
+
+create or replace function public.yn_creator_requests_admin() returns jsonb
+language plpgsql stable security definer set search_path='' as $$
+begin
+ if auth.uid() is null or not exists(select 1 from yndsi_private.owner where user_id=auth.uid()) then raise exception 'Доступ только владельцу сайта';end if;
+ return coalesce((select jsonb_agg(row_to_json(r)) from (
+ select p.code,p.name,v.channel,v.proof,v.verified,v.requested_at from yndsi_private.creator_verifications v
+ join yndsi_private.social_profiles p on p.user_id=v.user_id
+ order by v.verified,v.requested_at desc limit 100) r),'[]'::jsonb);
+end $$;
+create or replace function public.yn_creator_review(p_code text,p_channel text,p_proof text,p_verified boolean) returns void
+language plpgsql security definer set search_path='' as $$
+begin
+ if auth.uid() is null or not exists(select 1 from yndsi_private.owner where user_id=auth.uid()) then raise exception 'Доступ только владельцу сайта';end if;
+ if p_verified is null or not yndsi_private.take_quota(auth.uid(),'creator_review',30,60) then raise exception 'Попробуй позже';end if;
+ update yndsi_private.creator_verifications v set verified=p_verified,reviewed_at=now()
+ from yndsi_private.social_profiles p where p.user_id=v.user_id and p.code=upper(btrim(p_code)) and v.channel=p_channel and v.proof=p_proof;
+ if not found then raise exception 'Заявка изменилась. Обнови список и проверь канал заново.';end if;
+ exception when unique_violation then raise exception 'Этот канал уже подтверждён у другого пользователя';
+end $$;
+revoke all on function public.yn_creator_requests_admin(),public.yn_creator_review(text,text,text,boolean) from public,anon;
+grant execute on function public.yn_creator_requests_admin(),public.yn_creator_review(text,text,text,boolean) to authenticated;
+
 commit;
