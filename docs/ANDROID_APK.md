@@ -1,38 +1,21 @@
-# Бесплатный Android APK YNDSI
+# YNDSI Android test APK — 1.1
 
-Тестовая Android-оболочка Capacitor 8.6.0 открывает основной HTTPS-сайт. Google Play, платный аккаунт разработчика и платная облачная сборка для установки APK не нужны. APK работает только на Android, не на iPhone. Текущий сайт и PWA остаются самостоятельными.
+Current APK: `/downloads/yndsi-android-test-1.1.apk`. It opens `https://yndsi-streamer-hub.pages.dev` over HTTPS. Version name 1.1, version code 2, application ID `app.yndsi.hub`, Android 7.0+ (API 24), target SDK 36. Exact byte size, SHA-256 and signing-certificate digest are recorded in `downloads/android.json`; the website build verifies the artifact before publishing.
 
-Требования устройства: Android 7.0+ (API 24) и актуальный Android System WebView/Chrome. Для входа, переписки и синхронизации нужен интернет. Доступ к камере и микрофону спрашивается при записи, геолокация не запрашивается. При первом входе может потребоваться повторная авторизация, потому что сессия Safari/Chrome не переносится. Аккаунт используется прежний.
+The previous 1.0 APK opened Netlify. The 1.1 build uses the same application ID and signing certificate, verified against the actual previous APK using apksigner. Install it over the existing app; uninstalling is not required. Browser/WebView storage belongs to each origin, so switching Netlify to Cloudflare may require signing in again. The Supabase account and cloud-synced data remain the same. Unsynced local-only work on the old origin is not automatically migrated; sync/export it first if applicable.
 
-## Установка
+## Installation
 
-Передать APK на Android, открыть его и разрешить установку из выбранного источника (например, браузера или файлового менеджера), затем установить YNDSI. При необходимости вернуть разрешение установки из источника обратно после установки. Это тестовая debug-сборка, не релиз Google Play. Android может показать стандартное предупреждение для приложения вне магазина; подписанная установка не означает независимую проверку безопасности.
+Open `/android.html` or download the APK from the public website. Permit installation from your chosen browser/file manager if Android requests it, then install the update. This is a test debug build outside Google Play; no store purchase is required. Camera and microphone permissions are requested when recording. Geolocation is not requested. Android System WebView/Chrome should be current.
 
-## Сборка из исходников
+## Build and verification
 
-Node 22+, JDK 21, Android SDK platform 36, Build Tools 35.0.0; Android Studio либо command-line SDK. Указать ANDROID_HOME или локальный android/local.properties (не включать в Git).
+Node 22+, JDK 21, Android SDK platform 36, Build Tools 35/36. `npm ci` then `npm run mobile:build` (or use Gradle 8.14.3 explicitly). Output: `android/app/build/outputs/apk/debug/app-debug.apk`. Do not create a new signing key for an update to an installed app. Keep the existing keystore private and backed up; never commit it. Private key material is not included in the repository or website assets.
 
-npm ci
-npm run mobile:build
+For 1.1, assembleDebug passed, apksigner verified APK v2 and identical signer digests between 1.0 and 1.1, and aapt confirmed package/version/minimum/target SDK values. The packaged capacitor.config.json and offline asset were checked for the new Cloudflare origin and exact allowNavigation host. Cleartext, mixed content, WebView debugging and Android backups remain disabled.
 
-Команда синхронизирует mobile-shell и запускает Gradle assembleDebug. APK: android/app/build/outputs/apk/debug/app-debug.apk. Debug signing создаётся Android tools автоматически, отдельного платного сертификата не нужно. Для распространения стабильных обновлений позже нужен отдельный release-keystore: хранить приватно, резервировать, не включать в репозиторий. Сборки с разными ключами Android не установит друг поверх друга.
+## Limits
 
-## Ограничения прототипа
+This is a Capacitor remote-site prototype. It requires an internet connection for account data and messages. Native push and full offline private-data support are not implemented. Actual installation, Cloudflare/Turnstile behaviour in Android WebView, camera/microphone, keyboard and device navigation need physical Android testing; this development session has no Android phone. Confirmation links may open the browser; return to the app and sign in after confirmation.
 
-Используется Capacitor server.url с конкретным production HTTPS-host, cleartext/mixed content отключены. Это тестовая remote-site оболочка; для полноценного магазина/автономного релиза нужна отдельная стратегия bundled assets, API и CAPTCHA. Native push, фоновые сообщения и офлайн-переписка не реализованы. Изменения сайта появляются без пересборки оболочки; изменение нативных разрешений требует нового APK.
-
-Вход с Turnstile, камера/микрофон, фото, клавиатура, кнопка Назад, фон и переключение камеры требуют проверки на реальном Android. CAPTCHA в браузере и в WebView могут вести себя по-разному. Подтверждение почты может открыть браузер; после подтверждения вернуться в приложение и войти.
-
-Нативные исходники, node_modules, настройки SDK/подписи и package-lock не входят в публичную сборку сайта dist. Изменения iOS из отменённого эксперимента в эту ветку не включаются.
-
-## Результат сборки в этой среде
-
-assembleDebug выполнен успешно (93 Gradle tasks). apksigner verify подтвердил подпись APK v2; aapt подтвердил app.yndsi.hub, minSdk 24 и targetSdk 36. Размер около 3.9 МБ. SHA-256: e43acfe3e63695b04defeac451a4ff0d0e468fb485e4938ecf5e8f7628b6ea7a.
-
-Установка и реальная работа CAPTCHA/камеры на устройстве пока не проверены. Этот APK — тестовый debug, для выпуска и стабильных обновлений нужен сохраняемый приватный release-keystore (без обязательной оплаты магазина).
-
-## Скачивание с сайта
-
-Открытая страница /android.html и кнопки внизу сайта, на форме входа и в настройках ведут на /downloads/yndsi-android-test-1.0.apk. Регистрация не требуется. В нативной оболочке рекламный блок скрыт. Netlify отдаёт APK с application/vnd.android.package-archive и Content-Disposition attachment.
-
-Сборка проверяет размер и SHA-256 против downloads/android.json до публикации. При замене APK обновить версию/имя файла, метаданные и ссылки. Не публиковать изменённый файл под видом старой проверенной версии. Подпись и новый APK потребуются отдельно от обычных изменений сайта.
+Cloudflare must finish its Git deployment before the public link serves the new APK. The old Netlify site is a separate, credit-paused deployment and may still advertise 1.0. Existing PWA shortcuts also keep their old origin; add a new shortcut from the Cloudflare site if you use a web app instead of the APK.

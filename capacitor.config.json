@@ -3,10 +3,10 @@
   "appName": "YNDSI",
   "webDir": "mobile-shell",
   "server": {
-    "url": "https://reliable-unicorn-7ce032.netlify.app",
+    "url": "https://yndsi-streamer-hub.pages.dev",
     "cleartext": false,
     "allowNavigation": [
-      "reliable-unicorn-7ce032.netlify.app"
+      "yndsi-streamer-hub.pages.dev"
     ],
     "errorPath": "offline.html"
   },
