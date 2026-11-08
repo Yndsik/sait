@@ -23,10 +23,10 @@ async function saveProfile(){
  if(avatarBusy||window.ynCover?.busy){toast('Подожди обработки иконки');return}
  if(!$('#profileForm').reportValidity())return;if($('#profileTimeZone')&&!YndsiProfile.validZone($('#profileTimeZone').value)){toast('Выбери часовой пояс из списка');return}if(!$('#profileName').value.trim()){toast('Укажи имя профиля');return}
  const first=window.ynSocial?.profile?.profile_completed===false;const profile=readProfileDraft(),session=window.ynSync?.getUser()?.id;const button=$('#profileSave');if(button)button.disabled=true;
- try{await window.ynSocial?.publishIdentity(profile);if(session!==window.ynSync?.getUser()?.id)throw Error('Аккаунт изменился. Открой настройки заново.');profileDraft=null;if(workspaceAccess){db.profile=profile;save()}else render();if(first)go('friends');toast('Профиль сохранён')}
+ try{await window.ynSocial?.publishIdentity(profile);if(session!==window.ynSync?.getUser()?.id)throw Error('Аккаунт изменился. Открой настройки заново.');profileDraft=null;window.ynProfileView?.saved();if(workspaceAccess){db.profile=profile;save()}else render();if(first)go('friends');toast('Профиль сохранён')}
  catch(e){toast('Не удалось сохранить профиль: '+e.message)}finally{if($('#profileSave'))$('#profileSave').disabled=false}
 }
-function cancelProfile(){window.ynCover?.cancel();avatarRequest++;avatarBusy=false;profileDraft=null;render()}
+function cancelProfile(){window.ynProfileView?.saved();window.ynCover?.cancel();avatarRequest++;avatarBusy=false;profileDraft=null;render()}
 function removeProfileAvatar(){avatarRequest++;avatarBusy=false;profileDraft={...readProfileDraft(),avatar:''};previewProfile();$('#profileSave').disabled=false;$('#profileMessage').textContent='Иконка будет удалена после сохранения.'}
 async function uploadProfileAvatar(input){
  const file=input.files?.[0];if(!file)return;

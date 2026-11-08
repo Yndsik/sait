@@ -12,15 +12,15 @@
         "icon": "⌁",
         "title": "Найди своего стримера",
         "titleEn": "Find your streamer",
-        "text": "Поиск профилей RIVLO по нику Twitch и имени, публичные карточки и расписания. Привязка Twitch и добровольное появление в поиске — в настройках профиля после подключения сервиса администратором.",
-        "textEn": "Find RIVLO profiles by Twitch login or name, with public cards and schedules. Twitch linking and opt-in discovery are available in profile settings after administrator setup."
+        "text": "Поиск каналов Twitch, переход на эфир и связанный профиль RIVLO. Поиск по имени RIVLO, публичные карточки и расписания. Привязка Twitch и добровольное появление в поиске — в приватности после подключения сервиса администратором.",
+        "textEn": "Search Twitch channels, open streams and discover linked RIVLO profiles. Search by RIVLO name, with public cards and schedules. Twitch linking and opt-in discovery are available in Privacy after administrator setup."
       },
       {
         "icon": "✧",
         "title": "Удобнее каждый день",
         "titleEn": "Smoother every day",
-        "text": "Обновлённые карточки, иконки и мягкие анимации. Мобильный чат подстраивается под экран, меню закрывается по Escape, повторное нажатие не дублирует сообщение, а устаревшие результаты поиска не заменяют новые.",
-        "textEn": "Refined cards, icons and gentle motion. Mobile chats fit the screen, Escape closes the menu, repeated taps do not duplicate messages and stale search results cannot replace newer ones."
+        "text": "Живой профиль с обложкой и редактированием по карандашу. Привязки и подтверждения — в приватности. Поиск друзей по ID или Twitch; чужой ID не показывается в карточке профиля. Обновлённые карточки, иконки и мягкие анимации. Мобильный чат подстраивается под экран, меню закрывается по Escape, повторное нажатие не дублирует сообщение, а устаревшие результаты поиска не заменяют новые.",
+        "textEn": "A lively profile with a cover and pencil editing. Connections and verification live in Privacy. Find friends by ID or Twitch; other users’ IDs are hidden on profile cards. Refined cards, icons and gentle motion. Mobile chats fit the screen, Escape closes the menu, repeated taps do not duplicate messages and stale search results cannot replace newer ones."
       },
       {
         "icon": "✦",
