@@ -34,3 +34,14 @@ html[data-accent] .settings-row input,html[data-accent] .privacy-toggle input{ac
 html[data-accent] #view>.head.chroma-heading>div:first-child{padding:0;margin:0}
 .dash-stat i>.ui-icon{width:18px;height:18px}.quickbar>button>i>.ui-icon{width:18px;height:18px;vertical-align:middle}.quickbar{background:linear-gradient(125deg,#1a2e46,#102134);border-color:rgba(var(--chroma-rgb),.2);border-radius:22px}.quickbar>button{border-color:#a3bbdf21;color:#bacce7}.quickbar>button>i{color:var(--chroma)}
 html[data-accent] .nav button.active{color:var(--chroma-soft);background:rgba(var(--chroma-rgb),.12);border-color:rgba(var(--chroma-rgb),.23);box-shadow:none}#view h1[tabindex="-1"]:focus{outline:none}
+
+/* Extended colour studio. */
+html[data-accent=orchid]{--chroma:#c39bff;--chroma-rgb:195,155,255;--chroma-soft:#e0c7ff;--chroma-hot:#95dace;--atelier-lime:#e0c7ff;--atelier-accent:#c39bff;--route-tint:#c39bff;--purple:#c39bff}
+html[data-accent=rose]{--chroma:#ff96bf;--chroma-rgb:255,150,191;--chroma-soft:#ffd0df;--chroma-hot:#bbaaff;--atelier-lime:#ffd0df;--atelier-accent:#ff96bf;--route-tint:#ff96bf;--purple:#ff96bf}
+html[data-accent=arctic]{--chroma:#77d6ef;--chroma-rgb:119,214,239;--chroma-soft:#bfefff;--chroma-hot:#a7baff;--atelier-lime:#bfefff;--atelier-accent:#77d6ef;--route-tint:#77d6ef;--purple:#77d6ef}
+html[data-accent=gold]{--chroma:#e8c36d;--chroma-rgb:232,195,109;--chroma-soft:#f9e4ad;--chroma-hot:#b9c9eb;--atelier-lime:#f9e4ad;--atelier-accent:#e8c36d;--route-tint:#e8c36d;--purple:#e8c36d}
+.chroma-swatch.orchid{background:#302441}.chroma-swatch.orchid i{background:#c39bff}.chroma-swatch.orchid i:nth-child(2){background:#e0c7ff}.chroma-swatch.orchid i:nth-child(3){background:#95dace}
+.chroma-swatch.rose{background:#3e2439}.chroma-swatch.rose i{background:#ff96bf}.chroma-swatch.rose i:nth-child(2){background:#ffd0df}.chroma-swatch.rose i:nth-child(3){background:#bbaaff}
+.chroma-swatch.arctic{background:#183545}.chroma-swatch.arctic i{background:#77d6ef}.chroma-swatch.arctic i:nth-child(2){background:#bfefff}.chroma-swatch.arctic i:nth-child(3){background:#a7baff}
+.chroma-swatch.gold{background:#383222}.chroma-swatch.gold i{background:#e8c36d}.chroma-swatch.gold i:nth-child(2){background:#f9e4ad}.chroma-swatch.gold i:nth-child(3){background:#b9c9eb}
+.chroma-dialog{width:min(680px,calc(100% - 28px))}.chroma-settings{grid-template-columns:1fr}.chroma-choices{grid-template-columns:repeat(4,minmax(0,1fr))}@media(max-width:650px){.chroma-choices{grid-template-columns:repeat(3,minmax(0,1fr))}}

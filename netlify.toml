@@ -44,7 +44,7 @@
   for = "/downloads/*.apk"
   [headers.values]
     Content-Type = "application/vnd.android.package-archive"
-    Content-Disposition = "attachment; filename=YNDSI-Android-test-1.1.apk"
+    Content-Disposition = "attachment; filename=RIVLO-Android-test-2.0.0.apk"
     Cache-Control = "public, max-age=3600"
 [[headers]]
   for = "/downloads/android.json"

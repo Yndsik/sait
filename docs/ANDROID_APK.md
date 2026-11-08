@@ -1,8 +1,8 @@
-# YNDSI Android test APK — 1.1
+# RIVLO Android test APK — 2.0.0
 
-Current APK: `/downloads/yndsi-android-test-1.1.apk`. It opens `https://yndsi-streamer-hub.pages.dev` over HTTPS. Version name 1.1, version code 2, application ID `app.yndsi.hub`, Android 7.0+ (API 24), target SDK 36. Exact byte size, SHA-256 and signing-certificate digest are recorded in `downloads/android.json`; the website build verifies the artifact before publishing.
+Current APK: `/downloads/yndsi-android-test-2.0.0.apk`. It opens `https://yndsi-streamer-hub.pages.dev` over HTTPS. Version name 2.0.0, version code 3, application ID `app.yndsi.hub`, Android 7.0+ (API 24), target SDK 36. Exact byte size, SHA-256 and signing-certificate digest are recorded in `downloads/android.json`; the website build verifies the artifact before publishing.
 
-The previous 1.0 APK opened Netlify. The 1.1 build uses the same application ID and signing certificate, verified against the actual previous APK using apksigner. Install it over the existing app; uninstalling is not required. Browser/WebView storage belongs to each origin, so switching Netlify to Cloudflare may require signing in again. The Supabase account and cloud-synced data remain the same. Unsynced local-only work on the old origin is not automatically migrated; sync/export it first if applicable.
+The installed name and launcher icon are now RIVLO. The 2.0.0 build uses the same application ID and signing certificate as 1.1, verified against the actual previous APK using apksigner. Install it over the existing app; uninstalling is not required. Browser/WebView storage belongs to each origin, so switching Netlify to Cloudflare may require signing in again. The Supabase account and cloud-synced data remain the same. Unsynced local-only work on the old origin is not automatically migrated; sync/export it first if applicable.
 
 ## Installation
 
@@ -12,7 +12,7 @@ Open `/android.html` or download the APK from the public website. Permit install
 
 Node 22+, JDK 21, Android SDK platform 36, Build Tools 35/36. `npm ci` then `npm run mobile:build` (or use Gradle 8.14.3 explicitly). Output: `android/app/build/outputs/apk/debug/app-debug.apk`. Do not create a new signing key for an update to an installed app. Keep the existing keystore private and backed up; never commit it. Private key material is not included in the repository or website assets.
 
-For 1.1, assembleDebug passed, apksigner verified APK v2 and identical signer digests between 1.0 and 1.1, and aapt confirmed package/version/minimum/target SDK values. The packaged capacitor.config.json and offline asset were checked for the new Cloudflare origin and exact allowNavigation host. Cleartext, mixed content, WebView debugging and Android backups remain disabled.
+For 2.0.0, assembleDebug passed, apksigner verified APK v2 and identical signer digests between 1.1 and 2.0.0, and aapt confirmed package/version/minimum/target SDK values. The packaged capacitor.config.json and offline asset were checked for the existing Cloudflare origin and exact allowNavigation host. Cleartext, mixed content, WebView debugging and Android backups remain disabled.
 
 ## Limits
 

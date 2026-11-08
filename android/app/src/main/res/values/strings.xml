@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">YNDSI</string>
-    <string name="title_activity_main">YNDSI</string>
+    <string name="app_name">RIVLO</string>
+    <string name="title_activity_main">RIVLO</string>
     <string name="package_name">app.yndsi.hub</string>
     <string name="custom_url_scheme">app.yndsi.hub</string>
 </resources>
