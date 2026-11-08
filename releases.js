@@ -9,6 +9,13 @@
     "summaryEn": "A new name. Your familiar circle. More ways to play, stream and stay connected.",
     "sections": [
       {
+        "icon": "◈",
+        "title": "Твои игры — в центре",
+        "titleEn": "Your games take centre stage",
+        "text": "Новая личная библиотека с крупными обложками, прогрессом, избранным и компактными действиями. Плитки или список, поиск и фильтры коллекции. Каталог Steam — во вкладке «Открыть игры». Новый стиль и SVG-иконки, плавное появление карточек и обновлённый список «Хочу пройти».",
+        "textEn": "A personal library with large covers, progress, favourites and compact actions. Grid or list, collection search and filters. Steam lives in Discover games. A refreshed visual style, SVG icons, gentle card reveals and a redesigned wishlist."
+      },
+      {
         "icon": "⌘",
         "title": "Меньше кликов, больше дела",
         "titleEn": "Less clicking, more doing",
