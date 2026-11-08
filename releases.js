@@ -10,6 +10,13 @@
   "summaryEn": "Get to know the product first. Try your own stream plan without signing up.",
   "sections": [
     {
+      "icon": "↗",
+      "title": "Вход через Twitch",
+      "titleEn": "Sign in with Twitch",
+      "text": "Вход через Twitch рядом с email после настройки провайдера администратором. Данные Twitch сохраняются в личном профиле; ник RIVLO, постоянный ID и локальный черновик сохраняются.",
+      "textEn": "Sign in with Twitch alongside email after administrator setup. Twitch details are saved in your private profile; your RIVLO name, permanent ID and local draft stay intact."
+    },
+    {
       "icon": "◈",
       "title": "Понятный первый экран",
       "titleEn": "A clearer first impression",
