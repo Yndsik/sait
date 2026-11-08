@@ -12,5 +12,5 @@
  let toastTimer;toast=function(value){clearTimeout(toastTimer);const node=document.getElementById('toast');if(!node)return;node.textContent=value;node.setAttribute('role','status');node.setAttribute('aria-live','polite');node.style.display='block';window.ynI18n?.apply(node);animate(node,[{opacity:0,transform:'translateY(8px)'},{opacity:1,transform:'none'}],{duration:180});toastTimer=setTimeout(()=>{node.style.display='none'},Math.min(6000,2600+String(value).length*15))};
  const status=document.getElementById('cloudstatus');if(status){status.setAttribute('role','status');status.setAttribute('aria-live','polite');const title=()=>status.title=status.textContent;new MutationObserver(title).observe(status,{childList:true,subtree:true,characterData:true});title()}
  const visibility=()=>{document.body.classList.toggle('tab-hidden',document.hidden);if(document.hidden)stop()};document.addEventListener('visibilitychange',visibility);reduced?.addEventListener?.('change',()=>{if(reduced.matches)stop()});visibility();enter();queue();
- window.ynDesign={get motionEnabled(){return enabled()},stop};
+ window.ynDesign={animate,get motionEnabled(){return enabled()},stop};
 })();

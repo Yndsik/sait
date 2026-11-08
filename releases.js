@@ -9,6 +9,20 @@
     "summaryEn": "A new name. Your familiar circle. More ways to play, stream and stay connected.",
     "sections": [
       {
+        "icon": "⌁",
+        "title": "Найди своего стримера",
+        "titleEn": "Find your streamer",
+        "text": "Поиск профилей RIVLO по нику Twitch и имени, публичные карточки и расписания. Привязка Twitch и добровольное появление в поиске — в настройках профиля после подключения сервиса администратором.",
+        "textEn": "Find RIVLO profiles by Twitch login or name, with public cards and schedules. Twitch linking and opt-in discovery are available in profile settings after administrator setup."
+      },
+      {
+        "icon": "✧",
+        "title": "Удобнее каждый день",
+        "titleEn": "Smoother every day",
+        "text": "Обновлённые карточки, иконки и мягкие анимации. Мобильный чат подстраивается под экран, меню закрывается по Escape, повторное нажатие не дублирует сообщение, а устаревшие результаты поиска не заменяют новые.",
+        "textEn": "Refined cards, icons and gentle motion. Mobile chats fit the screen, Escape closes the menu, repeated taps do not duplicate messages and stale search results cannot replace newer ones."
+      },
+      {
         "icon": "✦",
         "title": "Новый характер",
         "titleEn": "A fresh identity",

@@ -65,7 +65,7 @@ test('messages list shows accepted contacts, unread counts, search and escaped n
 });
 test('friend action opens dedicated messages and returning to dialogs preserves draft',async()=>{
  const fields=new Map([['#chatText',{value:'Draft for Alice'}],['#socialChat',{scrollIntoView(){}}]]);
- const context={page:'friends',window:{ynSync:{getUser:()=>null},addEventListener(){}},document:{querySelectorAll:()=>[]},setInterval(){},$:id=>fields.get(id),go:p=>{context.page=p}};
+ const context={page:'friends',window:{scrollTo(){},ynSync:{getUser:()=>null},addEventListener(){}},document:{querySelectorAll:()=>[]},setInterval(){},$:id=>fields.get(id),go:p=>{context.page=p}};
  vm.createContext(context);vm.runInContext(fs.readFileSync('social-ui.js','utf8'),context);
  vm.runInContext("social.home={links:[{code:'AAAAAAAAAAAA',name:'Alice',status:'accepted'},{code:'BBBBBBBBBBBB',name:'Bob',status:'accepted'}]};social.chat=social.home.links[0]",context);
  context.socialRender=()=>{};context.refreshFriendChat=async()=>{};
