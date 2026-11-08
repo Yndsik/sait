@@ -9,6 +9,13 @@
     "summaryEn": "A new name. Your familiar circle. More ways to play, stream and stay connected.",
     "sections": [
       {
+        "icon": "⌘",
+        "title": "Меньше кликов, больше дела",
+        "titleEn": "Less clicking, more doing",
+        "text": "Быстрый поиск по разделам и своим записям, закреплённые разделы, поиск в загруженной переписке, фильтры задач и кнопка «Сегодня» в календаре. Пустые списки подсказывают следующий шаг, заметки открываются с клавиатуры.",
+        "textEn": "Quick navigation and local item search, pinned sections, loaded-message search, task filters and a Today calendar button. Empty lists suggest a next step and notes work with the keyboard."
+      },
+      {
         "icon": "@",
         "title": "Твой @ник и ссылка",
         "titleEn": "Your handle and profile link",
