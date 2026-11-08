@@ -29,10 +29,10 @@ async function sendChatMedia(){
  let entry=mediaDraft.entry,uploaded=mediaDraft.uploaded;mediaDraft.sending=true;$('#mediaSend').disabled=true;mediaStatus('Отправляем…');
  try{
   if(!window.ynSync.getUser()||social.chat?.code!==code)throw Error('Чат изменился. Открой вложение заново');
-  const mime=YndsiMedia.validate(kind,blob.type,blob.size,duration);
+  const reply=window.ynChatReplies?.prepare(caption,code)||{body:caption};const mime=YndsiMedia.validate(kind,blob.type,blob.size,duration);
   if(!entry){entry=await socialRPC('yn_media_prepare',{p_code:code,p_kind:kind,p_mime:mime,p_bytes:blob.size,p_duration:kind==='photo'?null:duration});if(sequence!==mediaDraft.sequence){await cleanupPending(entry,false);return}mediaDraft.entry=entry}
   if(!uploaded){const {error}=await window.ynSync.getClient().storage.from('chat-media').upload(entry.path,blob,{contentType:mime,cacheControl:'0',upsert:false});if(error&&String(error.statusCode)!=='409'&&!/already exists/i.test(error.message))throw error;uploaded=true;if(sequence!==mediaDraft.sequence){await cleanupPending(entry,true);return}mediaDraft.uploaded=true}
-  await socialRPC('yn_social_send_media',{p_attachment:entry.id,p_body:caption});if(sequence!==mediaDraft.sequence)return;
+  await socialRPC('yn_social_send_media',{p_attachment:entry.id,p_body:reply.body});if(sequence!==mediaDraft.sequence)return;window.ynChatReplies?.sent(code,reply.token);
   mediaDraft.entry=null;mediaDraft.sending=false;resetChatMedia();if(social.refreshing){const generation=social.generation;const fresh=await socialRPC('yn_social_chat',{p_code:code});if(generation===social.generation&&social.chat?.code===code){social.messages=mergeChatMessages(social.messages,fresh);paintMessages(true)}}else await refreshFriendChat();if(social.chat?.code===code&&typeof paintMessages==='function')paintMessages(true);toast('Вложение отправлено');return true;
  }catch(e){if(sequence===mediaDraft.sequence)mediaStatus('Не удалось отправить: '+(/yn_media_|yn_social_send_media|bucket.*not found/i.test(e.message)?'Нужно подключить SQL для медиа в Supabase.':e.message));else if(entry)cleanupPending(entry,uploaded)}
  finally{if(sequence===mediaDraft.sequence){mediaDraft.sending=false;if($('#mediaSend'))$('#mediaSend').disabled=false}}
