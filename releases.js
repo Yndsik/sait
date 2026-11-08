@@ -9,6 +9,13 @@
     "summaryEn": "A new name. Your familiar circle. More ways to play, stream and stay connected.",
     "sections": [
       {
+        "icon": "◈",
+        "title": "Больше твоего характера",
+        "titleEn": "More of your personality",
+        "text": "Семь цветовых оформлений. Обновлённый профиль с обложкой и игровой полкой, просмотр профилей с обзором и опубликованным расписанием. Аватарку и фото обложки можно увеличить. Android 2.0.0 с названием и иконкой RIVLO устанавливается поверх прежней сборки.",
+        "textEn": "Seven colour moods. A refreshed profile with a cover and game shelf, profile viewing with overview and published schedule. Enlarge avatars and cover photos. Android 2.0.0 brings the RIVLO name and icon and updates the previous build."
+      },
+      {
         "icon": "◌",
         "title": "Люди, планы и твой ритм",
         "titleEn": "People, plans and your rhythm",
@@ -93,7 +100,7 @@
         "textEn": "Channel ownership verification and badges beside names across profiles, friends and conversations. The site owner reviews requests on-site. Click-to-plan calendar dates, plus voice and video previews before sending."
       }
     ],
-    "note": "Напоминания и звук работают, пока сайт открыт. Общий онлайн — приблизительное число активных браузеров. Название установленной Android APK пока может отображаться как YNDSI.",
-    "noteEn": "Reminders and sounds work while the site is open. Site activity is an approximate count of active browsers. The installed Android APK may still be named YNDSI."
+    "note": "Напоминания и звук работают, пока сайт открыт. Общий онлайн — приблизительное число активных браузеров. Android APK 2.0.0 теперь устанавливается как RIVLO.",
+    "noteEn": "Reminders and sounds work while the site is open. Site activity is an approximate count of active browsers. Android APK 2.0.0 now installs as RIVLO."
   }
 ];if(typeof module==='object'&&module.exports)module.exports=releases;root.RivloReleases=releases})(typeof globalThis!=='undefined'?globalThis:this);

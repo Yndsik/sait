@@ -1,6 +1,6 @@
 {
   "appId": "app.yndsi.hub",
-  "appName": "YNDSI",
+  "appName": "RIVLO",
   "webDir": "mobile-shell",
   "server": {
     "url": "https://yndsi-streamer-hub.pages.dev",
