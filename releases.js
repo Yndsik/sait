@@ -1,7 +1,34 @@
 (function(root){const releases=[
+{
+  "version": "2.0.1",
+  "beta": true,
+  "announce": false,
+  "date": "2026-11-09",
+  "title": "RIVLO 2.0.1 — бета",
+  "titleEn": "RIVLO 2.0.1 — beta",
+  "summary": "Сначала познакомься с продуктом. Попробуй свой план эфира без регистрации.",
+  "summaryEn": "Get to know the product first. Try your own stream plan without signing up.",
+  "sections": [
+    {
+      "icon": "◈",
+      "title": "Понятный первый экран",
+      "titleEn": "A clearer first impression",
+      "text": "Новый hero, три карточки пользы и переключаемые макеты плана, расписания и разбора. Android — под основным контентом с пометкой «бета».",
+      "textEn": "A new hero, three benefit cards and switchable plan, schedule and review mock-ups. Android appears below the main content with a beta label."
+    },
+    {
+      "icon": "⌘",
+      "title": "Локальный черновик",
+      "titleEn": "A local draft",
+      "text": "Название, дата, план эфира, ссылки на клипы и заметки после эфира сохраняются только в этом браузере. Вход и регистрация работают как прежде.",
+      "textEn": "Save a title, date, rundown, clip links and post-stream notes in this browser only. Sign-in and registration work as before."
+    }
+  ],
+  "note": "Бета главного экрана. Данные локального режима не публикуются и не переносятся в аккаунт автоматически. Версия Android APK остаётся 2.0.0.",
+  "noteEn": "Homepage beta. Local-mode data is not published or automatically transferred to an account. The Android APK remains at 2.0.0."
+},
   {
     "version": "2.0.0",
-    "foldedVersions": ["2.0.1"],
     "date": "2026-11-08",
     "title": "Знакомься, RIVLO",
     "titleEn": "Meet RIVLO",
