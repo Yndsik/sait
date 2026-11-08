@@ -76,3 +76,7 @@ https://supabase.com/dashboard/project/ougbjjfrxfokyqqriqtx/sql/new
 Глобальный поиск работает через серверный Helix API после добавления ключей Cloudflare. Незарегистрированные в RIVLO каналы имеют только ссылку Twitch. Список не включает весь Twitch сразу, используются запрос и пагинация. Не показываем выдуманный live-статус. Подключение на настоящем Twitch нельзя проверить до настройки вашего приложения; локальные проверки используют имитацию OAuth-ответов, настоящую SDK-форму вызова и PostgreSQL-проверки прав.
 
 Официальные инструкции: https://supabase.com/docs/guides/auth/social-sign-in/auth-twitch и https://supabase.com/docs/guides/auth/auth-identity-linking .
+
+## Вход без предварительного email-аккаунта (2.0.1 бета)
+
+Добавлена отдельная кнопка входа/регистрации через Supabase Twitch. Полная пошаговая инструкция, callback URL, конфликты email и проверка: [TWITCH_SIGNIN_2_0_1_BETA.md](TWITCH_SIGNIN_2_0_1_BETA.md). Поля Twitch сохраняются в приватный профиль отдельно от выбранного ника и аватарки RIVLO. Прежняя явная привязка в приватности сохраняется.
