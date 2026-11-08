@@ -1,13 +1,5 @@
 (function(root){const releases=[
 {
- "version":"2.0.2","beta":true,"announce":false,"date":"2026-11-09",
- "title":"RIVLO 2.0.2 — бета","titleEn":"RIVLO 2.0.2 — beta",
- "summary":"Чище первый экран на телефоне.","summaryEn":"A cleaner first screen on your phone.",
- "sections":[{"icon":"◈","title":"Главная на мобильном","titleEn":"Mobile home","text":"Компактная шапка с RIVLO и входом или аватаркой. Язык и оформление доступны в настройках. Убраны служебная строка и декор под текстом; кнопки одинаковой ширины и высоты, подпись контрастнее.","textEn":"A compact header with RIVLO and sign-in or your avatar. Language and colours remain in Settings. The utility row and art behind the copy are hidden; equal-size buttons and clearer supporting text."}],
- "note":"Мобильное оформление 360–430 px. Логика входа, локального режима и Twitch сохранена.","noteEn":"Mobile styling for 360–430px. Sign-in, local mode and Twitch behavior stay unchanged."
-},
-
-{
   "version": "2.0.1",
   "beta": true,
   "announce": false,
