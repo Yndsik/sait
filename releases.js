@@ -9,6 +9,13 @@
     "summaryEn": "A new name. Your familiar circle. More ways to play, stream and stay connected.",
     "sections": [
       {
+        "icon": "@",
+        "title": "Твой @ник и ссылка",
+        "titleEn": "Your handle and profile link",
+        "text": "Выбери уникальный @ник через карандаш в профиле. Друзья смогут найти тебя по нему или открыть ссылку на профиль без Twitch. Видимость поиска и ссылки управляется в приватности после обновления базы.",
+        "textEn": "Choose a unique handle using the profile pencil. Friends can find you or open your profile link without Twitch. Control handle and link visibility in Privacy after the database update."
+      },
+      {
         "icon": "⌁",
         "title": "Найди своего стримера",
         "titleEn": "Find your streamer",
@@ -19,8 +26,8 @@
         "icon": "✧",
         "title": "Удобнее каждый день",
         "titleEn": "Smoother every day",
-        "text": "Живой профиль с обложкой и редактированием по карандашу. Привязки и подтверждения — в приватности. Поиск друзей по ID или Twitch; чужой ID не показывается в карточке профиля. Обновлённые карточки, иконки и мягкие анимации. Мобильный чат подстраивается под экран, меню закрывается по Escape, повторное нажатие не дублирует сообщение, а устаревшие результаты поиска не заменяют новые.",
-        "textEn": "A lively profile with a cover and pencil editing. Connections and verification live in Privacy. Find friends by ID or Twitch; other users’ IDs are hidden on profile cards. Refined cards, icons and gentle motion. Mobile chats fit the screen, Escape closes the menu, repeated taps do not duplicate messages and stale search results cannot replace newer ones."
+        "text": "Живой профиль с обложкой и редактированием по карандашу. Привязки и подтверждения — в приватности. Поиск друзей по ID или Twitch; чужой ID не показывается в карточке профиля. Единое оформление всех вкладок: обновлённые карточки, формы, иконки и мягкие анимации. В чате — разделители по дням, группы сообщений и быстрый переход к последним. Мобильный чат подстраивается под экран, меню закрывается по Escape, повторное нажатие не дублирует сообщение, а устаревшие результаты поиска не заменяют новые.",
+        "textEn": "A lively profile with a cover and pencil editing. Connections and verification live in Privacy. Find friends by ID or Twitch; other users’ IDs are hidden on profile cards. A shared visual style across all tabs: refined cards, forms, icons and gentle motion. Chats gain day separators, consecutive groups and a jump to latest messages. Mobile chats fit the screen, Escape closes the menu, repeated taps do not duplicate messages and stale search results cannot replace newer ones."
       },
       {
         "icon": "✦",
