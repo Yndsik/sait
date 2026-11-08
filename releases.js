@@ -12,8 +12,8 @@
         "icon": "◌",
         "title": "Люди, планы и твой ритм",
         "titleEn": "People, plans and your rhythm",
-        "text": "Новый календарь с месяцем, неделей, списком планов и панелью дня. Новый раздел друзей с отдельными заявками. Закреплённые диалоги и превью загруженных сообщений. Личная вкладка «Пульс» объединяет ближайшие эфиры, задачи, прохождения и свой круг.",
-        "textEn": "A new calendar with month, week, agenda and day details. Redesigned friends and request filters. Pinned conversations and loaded-message previews. Your private Pulse brings upcoming streams, tasks, playthroughs and friends together."
+        "text": "Новый календарь с месяцем, неделей, списком планов и панелью дня. Новый раздел друзей с отдельными заявками. Закреплённые диалоги и превью загруженных сообщений. Контрастное оформление всех разделов, три цветовых акцента и просторный режим переписки.",
+        "textEn": "A new calendar with month, week, agenda and day details. Redesigned friends and request filters. Pinned conversations and loaded-message previews. A high-contrast design across every section, three colour accents and a spacious conversation mode."
       },
       {
         "icon": "◈",
