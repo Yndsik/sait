@@ -9,6 +9,7 @@
   "summary": "Сначала познакомься с продуктом. Попробуй свой план эфира без регистрации.",
   "summaryEn": "Get to know the product first. Try your own stream plan without signing up.",
   "sections": [
+{"icon": "✦", "title": "Больше движения и света", "titleEn": "More motion and light", "text": "Плавные появления, отклик кнопок, подсветка карточек и обновлённые поверхности. Отдельный выбор спокойных или выразительных дополнительных эффектов в настройках.", "textEn": "Gentle reveals, button feedback, card lighting and refreshed surfaces. Choose calm or expressive extra effects in Settings."},
     {
       "icon": "↗",
       "title": "Вход через Twitch",
