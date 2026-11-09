@@ -9,6 +9,7 @@
   "summary": "Сначала познакомься с продуктом. Попробуй свой план эфира без регистрации.",
   "summaryEn": "Get to know the product first. Try your own stream plan without signing up.",
   "sections": [
+{"icon":"✦","title":"Больше света и глубины","titleEn":"More light and depth","text":"Сияние в цвет темы, выразительные карточки и мягкие реакции. Атмосферу можно отключить в настройках.","textEn":"Palette-aware glow, dimensional cards and soft interactions. Disable the atmosphere in settings."},
 {"icon":"messages","title":"Новый облик общения","titleEn":"A fresh conversation design","text":"Компактные сообщения, единое оформление медиа и разделитель новых сообщений при открытии диалога.","textEn":"Compact messages, consistent media styling and an unread divider when opening a conversation."},
 {"icon": "↪", "title": "Разговоры с контекстом", "titleEn": "Conversations with context", "text": "Ответы с цитатой на текст и вложения, переход к исходному сообщению и отдельное отключение звука диалога на этом устройстве.", "textEn": "Quoted replies to text and attachments, jumps to original messages and per-conversation sound controls on this device."},
 {"icon": "✦", "title": "Больше движения и света", "titleEn": "More motion and light", "text": "Плавные появления, отклик кнопок, подсветка карточек и обновлённые поверхности. Отдельный выбор спокойных или выразительных дополнительных эффектов в настройках.", "textEn": "Gentle reveals, button feedback, card lighting and refreshed surfaces. Choose calm or expressive extra effects in Settings."},
