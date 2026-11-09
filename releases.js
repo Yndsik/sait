@@ -9,6 +9,7 @@
   "summary": "Сначала познакомься с продуктом. Попробуй свой план эфира без регистрации.",
   "summaryEn": "Get to know the product first. Try your own stream plan without signing up.",
   "sections": [
+{"icon":"chart","title":"Отдельная вкладка Dota 2","titleEn":"Dedicated Dota 2 tab","text":"Поиск по Dota ID, SteamID64 или числовой ссылке профиля. Карточки героев, фильтры побед/поражений и подсказки для поиска своего аккаунта.","textEn":"Find a player by Dota ID, SteamID64 or numeric profile link. Hero cards, outcome filters and help finding your account."},
 {"icon":"chart","title":"Dota 2: статистика игрока","titleEn":"Dota 2: player stats","text":"Публичный поиск по Dota ID, последние доступные матчи, винрейт выборки и пояснения метрик. Источник — OpenDota.","textEn":"Public Dota ID lookup, recent available matches, sample win rate and metric explanations. Data from OpenDota."},
 {"icon":"share","title":"Подготовка игрового эфира","titleEn":"Prepare your gaming stream","text":"Генератор анонса с копированием текста и идеи для тренировочных эфиров Dota 2 и CS2. Ничего не публикуется автоматически.","textEn":"Copy-ready announcements and practice stream ideas for Dota 2 and CS2. Nothing is posted automatically."},
 {"icon":"✦","title":"Больше света и глубины","titleEn":"More light and depth","text":"Сияние в цвет темы, выразительные карточки и мягкие реакции. Атмосферу можно отключить в настройках.","textEn":"Palette-aware glow, dimensional cards and soft interactions. Disable the atmosphere in settings."},
