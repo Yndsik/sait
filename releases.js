@@ -9,6 +9,7 @@
   "summary": "Сначала познакомься с продуктом. Попробуй свой план эфира без регистрации.",
   "summaryEn": "Get to know the product first. Try your own stream plan without signing up.",
   "sections": [
+{"icon":"share","title":"Подготовка игрового эфира","titleEn":"Prepare your gaming stream","text":"Генератор анонса с копированием текста и идеи для тренировочных эфиров Dota 2 и CS2. Ничего не публикуется автоматически.","textEn":"Copy-ready announcements and practice stream ideas for Dota 2 and CS2. Nothing is posted automatically."},
 {"icon":"✦","title":"Больше света и глубины","titleEn":"More light and depth","text":"Сияние в цвет темы, выразительные карточки и мягкие реакции. Атмосферу можно отключить в настройках.","textEn":"Palette-aware glow, dimensional cards and soft interactions. Disable the atmosphere in settings."},
 {"icon":"messages","title":"Новый облик общения","titleEn":"A fresh conversation design","text":"Компактные сообщения, единое оформление медиа и разделитель новых сообщений при открытии диалога.","textEn":"Compact messages, consistent media styling and an unread divider when opening a conversation."},
 {"icon": "↪", "title": "Разговоры с контекстом", "titleEn": "Conversations with context", "text": "Ответы с цитатой на текст и вложения, переход к исходному сообщению и отдельное отключение звука диалога на этом устройстве.", "textEn": "Quoted replies to text and attachments, jumps to original messages and per-conversation sound controls on this device."},
