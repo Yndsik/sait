@@ -19,5 +19,6 @@ video:'<circle cx="12" cy="12" r="10"/><path d="m10 8 6 4-6 4Z" fill="currentCol
 bell:'<path d="M5 9a7 7 0 0 1 14 0c0 6 2 7 2 8H3c0-1 2-2 2-8Zm4 12h6"/><path d="M12 2v2"/>',
 expand:'<path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/>',
 collapse:'<path d="M3 8h5V3m8 0v5h5M8 21v-5H3m13 5v-5h5"/>',
+external:'<path d="M14 3h7v7m0-7L10 14M11 3H6a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h12a3 3 0 0 0 3-3v-5"/>',
 palette:'<circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h9"/><circle cx="16" cy="8" r="1" fill="currentColor"/>'
 });root.YndsiIcons={get:name=>Object.hasOwn(paths,name)?`<svg data-icon="${name}" class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths[name]}</svg>`:''}})(globalThis);
