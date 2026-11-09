@@ -1,0 +1,8 @@
+/* Public OpenDota fields only. Unknown values remain null, never guessed. */
+(function(root){
+ const integer=(v,max=Number.MAX_SAFE_INTEGER)=>typeof v==='number'&&Number.isInteger(v)&&v>=0&&v<=max?v:null;
+ function account(value){const s=String(value||'').trim();return /^[1-9][0-9]{0,9}$/.test(s)&&BigInt(s)<=4294967295n?s:null}
+ function normalize(profile,matches,heroes=[]){if(!profile||typeof profile!=='object'||Array.isArray(profile)||!Array.isArray(matches))throw Error('UPSTREAM');const names=new Map(Array.isArray(heroes)?heroes.map(h=>[h.id,String(h.localized_name||'').slice(0,60)]):[]);const rows=matches.slice(0,20).filter(m=>integer(m.match_id)!==null).map(m=>{const slot=integer(m.player_slot,255),win=typeof m.radiant_win==='boolean'&&slot!==null&&(slot<=4||(slot>=128&&slot<=132))?((slot<128)===m.radiant_win):null;return {id:String(m.match_id),hero:names.get(m.hero_id)||null,heroId:integer(m.hero_id,1000),win,kills:integer(m.kills,1000),deaths:integer(m.deaths,1000),assists:integer(m.assists,1000),duration:integer(m.duration,86400),start:integer(m.start_time),gpm:integer(m.gold_per_min,10000),xpm:integer(m.xp_per_min,10000)}});return {name:typeof profile.profile?.personaname==='string'?profile.profile.personaname.slice(0,80):null,matches:rows}}
+ function summary(rows){const known=rows.filter(r=>typeof r.win==='boolean'),wins=known.filter(r=>r.win).length;return {total:rows.length,known:known.length,wins,losses:known.length-wins,rate:known.length?Math.round(wins/known.length*100):null}}
+ const model={account,normalize,summary};if(typeof module!=='undefined'&&module.exports)module.exports=model;else root.RivloDota=model;
+})(globalThis);
