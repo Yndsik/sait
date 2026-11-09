@@ -2,12 +2,14 @@ import steam from '../netlify/functions/steam.js';
 import news from '../netlify/functions/news.js';
 import online from '../netlify/functions/online.js';
 import twitch from '../netlify/functions/twitch.js';
+import dota from '../netlify/functions/dota.js';
 
 function response(result){return new Response(result.body,{status:result.statusCode,headers:{...result.headers,'X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer','X-Frame-Options':'DENY'}})}
 export default {
  async fetch(request,env,context){
   const url=new URL(request.url),path=url.pathname;
   if(path==='/api/online'||path==='/.netlify/functions/online'){const key=new Request(new URL('/api/online',url),{method:'GET'}),cache=typeof caches!=='undefined'?caches.default:null;if(request.method==='GET'&&cache){const hit=await cache.match(key);if(hit)return hit}if(request.method==='POST'&&Number(request.headers.get('content-length')||0)>256)return new Response('Request too large',{status:413});const body=request.method==='POST'?await request.text():undefined;const result=response(await online.handleWithEnv({httpMethod:request.method,body,requestOrigin:url.origin,headers:{'content-type':request.headers.get('content-type')||'',origin:request.headers.get('origin')||'','x-nf-client-connection-ip':request.headers.get('cf-connecting-ip')||''}},env));if(request.method==='GET'&&result.status===200&&cache&&context?.waitUntil)context.waitUntil(cache.put(key,result.clone()));return result}
+  if(path==='/api/dota'||path==='/.netlify/functions/dota')return response(await dota.handler({httpMethod:request.method,queryStringParameters:Object.fromEntries(url.searchParams),headers:{'x-nf-client-connection-ip':request.headers.get('cf-connecting-ip')||''}}));
   if(path==='/api/twitch'||path==='/.netlify/functions/twitch'){return response(await twitch.handleWithEnv({httpMethod:request.method,queryStringParameters:Object.fromEntries(url.searchParams),headers:{'x-nf-client-connection-ip':request.headers.get('cf-connecting-ip')||''}},env))}
   const isSteam=path==='/.netlify/functions/steam'||path==='/api/steam',isNews=path==='/.netlify/functions/news'||path==='/api/news';
   if(!isSteam&&!isNews){if(path.startsWith('/api/')||path.startsWith('/.netlify/functions/'))return response({statusCode:404,headers:{'Content-Type':'application/json','Cache-Control':'no-store'},body:'{"error":"Not found"}'});return env.ASSETS.fetch(request)}
