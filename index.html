@@ -1,6 +1,12 @@
 <!doctype html>
 <html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>RIVLO — игры, стримы и твой круг</title>
+<title>RIVLO — план эфира, расписание и сообщество</title>
+<meta name="description" content="Планируй эфиры, делись расписанием, находи игры и общайся со своим сообществом в RIVLO. Попробуй без регистрации.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="RIVLO — операционка твоего стрима">
+<meta property="og:description" content="План эфира, расписание, клипы и разбор в одном месте. Попробуй без регистрации.">
+<meta property="og:image" content="https://yndsi-streamer-hub.pages.dev/icons/rivlo-512.png">
+<meta name="twitter:card" content="summary">
 <script src="i18n-dictionary.js"></script>
 <script src="i18n.js"></script>
 <link rel="icon" type="image/svg+xml" href="/icons/rivlo.svg">
@@ -46,6 +52,7 @@ body{background:radial-gradient(ellipse at 78% -10%,rgba(112,76,177,.22),transpa
 <link rel="stylesheet" href="chat-extras.css">
 <link rel="stylesheet" href="chat-studio.css">
 <link rel="stylesheet" href="radiance.css">
+<link rel="stylesheet" href="creator-tools.css">
 </head><body>
 <div class="layout"><aside class="side" id="side"><div class="logo"><div class="mark"><img src="/icons/rivlo.svg" width="44" height="44" alt=""></div><div><b>RIVLO</b><small>Играй. Планируй. Общайся.</small></div></div>
 <div class="navlabel">ТВОЁ ПРОСТРАНСТВО</div><nav class="nav" id="nav">
@@ -282,5 +289,7 @@ render();
 <script src="chat-extras-ui.js"></script>
 <script src="chat-studio-ui.js"></script>
 <script src="radiance-ui.js"></script>
+<script src="creator-tools-model.js"></script>
+<script src="creator-tools-ui.js"></script>
 <style>.steamshots{display:flex;gap:10px;overflow:auto;max-width:100%;padding:12px 0}.steamshots img{width:240px;max-width:75vw;border-radius:10px}details summary{cursor:pointer;margin-top:12px;color:var(--cyan)}.toolbar label{flex:1;min-width:120px}.toolbar .field{max-width:100%}@media(max-width:600px){.game{flex-wrap:wrap}.gameinfo{min-width:100px}.toolbar{flex-wrap:wrap}.actions{flex-wrap:wrap}}@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}</style>
 </body></html>
